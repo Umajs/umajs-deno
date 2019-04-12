@@ -1,4 +1,4 @@
-import { SetController } from './ControllerMap';
+import { SetController } from './ControllerHelper';
 import { IPathInfo } from './type';
 
 // static

@@ -5,6 +5,7 @@ export type IControllerInfo = {
 };
 
 export type IPathInfo = {
+    keys?: any[],
     clazz: Function,
     methodName: string,
 };
