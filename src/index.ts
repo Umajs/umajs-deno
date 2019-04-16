@@ -7,6 +7,7 @@ import { readControllerDir, ControllerMap } from './ControllerHelper';
 import { getConfig, setConfig } from './Config';
 import { Path, StaticMap, RouteMap } from './Path';
 import { Before, After } from './AOP';
+import log from './log';
 
 const Router = (cfg = {}) => {
     setConfig(cfg);
@@ -39,8 +40,8 @@ const Router = (cfg = {}) => {
         StaticMap.delete(mp);
     }
 
-    console.log(StaticMap);
-    console.log(RouteMap);
+    log(StaticMap);
+    log(RouteMap);
 
     return router;
 };

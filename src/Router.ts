@@ -1,6 +1,7 @@
 import Controller from './Controller';
 import { StaticMap, MatchRegexp } from './Path';
 import { IRoute } from './type';
+import log from './log';
 
 export const ClazzMap: Map<String, IRoute> = new Map();
 
@@ -34,7 +35,7 @@ async function callMethod(clazz: any, methodName: string, params: string[], ctx:
 export default async function Router(ctx: any, next: Function) {
     try {
         const reqPath = ctx.request.path;
-        console.log('reqPath', reqPath);
+        log('request path', reqPath);
 
         // static
         const staticResult = StaticMap.get(reqPath);
