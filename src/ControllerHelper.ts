@@ -29,11 +29,12 @@ export function readControllerDir(dirPath: string) {
     }
 }
 
-export function SetController(clazz: Function, methodName: string, { rootPath, clazzName }: IControllerInfo) {
+export function SetController(clazz: Function, methodName: string, info: IControllerInfo = {}) {
     const clazzInfo: IControllerInfo = ControllerMap.get(clazz) || {
         pathMethodNames: [],
     };
 
+    const { rootPath, clazzName } = info;
     if (clazzName) clazzInfo.clazzName = clazzName;
     if (rootPath) clazzInfo.rootPath = rootPath;
     if (methodName && clazzInfo.pathMethodNames.indexOf(methodName) === -1) {

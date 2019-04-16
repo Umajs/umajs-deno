@@ -6,6 +6,7 @@ import router, { ClazzMap } from './Router';
 import { readControllerDir, ControllerMap } from './ControllerHelper';
 import { getConfig, setConfig } from './Config';
 import { Path, StaticMap, RouteMap } from './Path';
+import { Before, After } from './AOP';
 
 const Router = (cfg = {}) => {
     setConfig(cfg);
@@ -38,11 +39,16 @@ const Router = (cfg = {}) => {
         StaticMap.delete(mp);
     }
 
+    console.log(StaticMap);
+    console.log(RouteMap);
+
     return router;
 };
 
 export {
     Path,
     Router,
+    Before,
+    After,
     Controller,
 };
