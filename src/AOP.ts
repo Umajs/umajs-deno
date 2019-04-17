@@ -1,15 +1,18 @@
 import { SetController } from './ControllerHelper';
 
+function reDefineProperty(clazz: Function, methodName: string, newMethodName: string) {
+    SetController(clazz, methodName);
+    Reflect.defineProperty(clazz, newMethodName, {
+        get: function get() {
+            return Reflect.get(clazz, methodName).bind(this);
+        },
+    });
+}
+
 export function Before(fn?: Function): Function {
     return function _before(target: Function, methodName: string, { value, configurable, enumerable }: PropertyDescriptor) {
         if (!fn) {
-            SetController(target, methodName);
-            Reflect.defineProperty(target, '__before', {
-                get: function get() {
-                    return Reflect.get(target, methodName).bind(this);
-                },
-            });
-            return;
+            return reDefineProperty(target, methodName, '__before');
         }
 
         return {
@@ -29,13 +32,7 @@ export function Before(fn?: Function): Function {
 export function After(fn?: Function): Function {
     return function _after(target: Function, methodName: string, { value, configurable, enumerable }: PropertyDescriptor) {
         if (!fn) {
-            SetController(target, methodName);
-            Reflect.defineProperty(target, '__after', {
-                get: function get() {
-                    return Reflect.get(target, methodName).bind(this);
-                },
-            });
-            return;
+            return reDefineProperty(target, methodName, '__after');
         }
 
         return {
