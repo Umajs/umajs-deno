@@ -6,7 +6,7 @@
     "test": "mocha test",
     "lint": "esw src --clear -w --ext .ts",
     "start": "parallelshell 'npm run lint' 'tsc -w --inlineSourceMap'",
-    "koa": "supervisor -e js test/app.js"
+    "koa": "ts-node-dev test/app.ts"
   },
   "keywords": [],
   "author": "",
@@ -30,6 +30,8 @@
     "eslint-watch": "^4.0.2",
     "parallelshell": "^3.0.2",
     "supervisor": "^0.12.0",
+    "ts-node": "^8.1.0",
+    "ts-node-dev": "^1.0.0-pre.32",
     "typescript": "^3.2.2"
   },
   "engine-strict": true,
