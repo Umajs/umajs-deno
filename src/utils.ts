@@ -12,9 +12,9 @@ export function ControllerMatch(name: string) {
         const {
             controllerSuffix = '',
         } = getConfig();
-        controllerReg = new RegExp(`([a-zA-Z0-9_]+)${controllerSuffix}.js`);
+        controllerReg = new RegExp(`([a-zA-Z0-9_]+)${controllerSuffix}`);
     }
 
-    const result = name.match(controllerReg);
+    const result = name.split('.')[0].match(controllerReg);
     return result;
 }
