@@ -43,3 +43,7 @@ export function SetController(clazz: Function, methodName: string, info: IContro
 
     ControllerMap.set(clazz, clazzInfo);
 }
+
+export function Private(target: any, methodName: string) {
+    SetController(target.constructor, methodName);
+}

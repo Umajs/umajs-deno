@@ -1,6 +1,6 @@
 {
-  "name": "koa-demo",
-  "version": "1.0.0",
+  "name": "koa-router-class",
+  "version": "0.0.1",
   "main": "index.js",
   "scripts": {
     "test": "mocha test",

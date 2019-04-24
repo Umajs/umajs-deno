@@ -3,7 +3,7 @@ import * as pathToRegexp from 'path-to-regexp';
 
 import Controller from './Controller';
 import router, { ClazzMap } from './Router';
-import { readControllerDir, ControllerMap } from './ControllerHelper';
+import { readControllerDir, ControllerMap, Private } from './ControllerHelper';
 import { getConfig, setConfig } from './Config';
 import { Path, StaticMap, RouteMap } from './Path';
 import { Before, After } from './AOP';
@@ -51,5 +51,6 @@ export {
     Router,
     Before,
     After,
+    Private,
     Controller,
 };

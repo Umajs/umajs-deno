@@ -1,7 +1,9 @@
-import { Before, After, Path, Controller } from '../../src/index';
+import { Before, After, Private, Path, Controller } from '../../src/index';
 
 @Path('/index')
 export default class Index extends Controller {
+
+    // @Private
     index() {
         this.ctx.body = '这里是首页';
     }
@@ -14,6 +16,11 @@ export default class Index extends Controller {
     test(name: string) {
         console.log('......', name);
         this.ctx.body = `这里是测试页面，地址 ${this.req.path}`;
+    }
+
+    @Private
+    hello() {
+        this.ctx.body = 'hello.';
     }
 
     /* eslint-disable class-methods-use-this */
