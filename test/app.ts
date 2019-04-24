@@ -7,11 +7,14 @@ const app = new Koa();
 
 app.use(Router({
     controllerRoot: path.resolve(process.cwd(), 'test'),
+    routers: [
+        
+    ],
 }));
 
 // response
 app.use(ctx => {
-  ctx.body = 'Hello Koa';
+    ctx.body = 'Hello Koa';
 });
 
 app.listen(3000);

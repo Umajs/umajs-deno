@@ -14,12 +14,31 @@ const Router = (cfg = {}) => {
 
     const {
         controllerRoot,
+        routers = [],
     } = getConfig();
 
     readControllerDir(path.resolve(controllerRoot, 'controller'));
 
     for (const [clazz, { clazzName, pathMethodNames }] of ControllerMap) {
         ClazzMap.set(clazzName, { clazz, pathMethodNames });
+    }
+
+    for (const [routes, url] of routers) {
+        const [, clazzName, , methodName] = url.split('/');
+        if (!clazzName || !methodName) return;
+
+        const { clazz }: any = ClazzMap.get(clazzName) || {};
+        if (!clazz || Reflect.get(clazz, methodName)) return;
+
+        const { pathMethodNames } = ControllerMap.get(clazz);
+        pathMethodNames.push(methodName);
+        ClazzMap.set(clazzName, {
+            clazz,
+            pathMethodNames,
+        });
+        for (const route of routes) {
+            StaticMap.set(route, { clazz, methodName });
+        }
     }
 
     const mps = [...StaticMap.keys()];
