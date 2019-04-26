@@ -1,7 +1,7 @@
 {
   "name": "koa-router-class",
-  "version": "0.1.0",
-  "main": "index.js",
+  "version": "0.0.6",
+  "main": "dist/index.js",
   "scripts": {
     "test": "mocha test",
     "lint": "esw src --clear -w --ext .ts",
