@@ -7,7 +7,7 @@ import { readControllerDir, ControllerMap, Inside, SetController } from './Contr
 import { getConfig, setConfig } from './Config';
 import { Path, StaticMap, RouteMap } from './Path';
 import { Before, After } from './AOP';
-import Methods from './Methods';
+import RequestMethod from './RequestMethod';
 import log from './log';
 import { IControllerInfo, IMethodInfo, IPathInfo } from './type';
 
@@ -45,12 +45,10 @@ const Router = (cfg = {}) => {
 
         const clazzInfo: IControllerInfo = ControllerMap.get(clazz) || {};
         const methodMap: Map<string, IMethodInfo> = clazzInfo.methodMap || new Map();
-        const { inside = false, methodType } = methodMap.get(methodName);
+        const { inside = false } = methodMap.get(methodName);
         const { rootPath = '' } = clazzInfo;
 
         const pathInfo: IPathInfo = { clazz, methodName, inside };
-        if (methodType) pathInfo.methodType = methodType;
-
         const methodPath = rootPath + mp;
         if (mp.indexOf(':') > -1) {
             const keys = [];
@@ -64,7 +62,6 @@ const Router = (cfg = {}) => {
     }
 
     log('ControllerMap', ControllerMap);
-    log('.......', ClazzMap.get('index').methodMap.get('index'));
     log('StaticMap', StaticMap);
     log('RouteMap', RouteMap);
 
@@ -77,6 +74,6 @@ export {
     Before,
     After,
     Inside,
-    Methods,
+    RequestMethod,
     Controller,
 };

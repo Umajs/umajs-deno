@@ -1,4 +1,4 @@
-import { Before, After, Inside, Path, Methods, Controller } from '../../src/index';
+import { Before, After, Inside, Path, RequestMethod, Controller } from '../../src/index';
 
 function before() {
     console.log('before', this.req.path);
@@ -9,8 +9,7 @@ function before() {
 export default class Index extends Controller {
 
     // @Private
-    // @Get
-    @Methods.GET
+    @RequestMethod.GET
     index() {
         this.ctx.body = '这里是首页';
     }
@@ -22,13 +21,15 @@ export default class Index extends Controller {
         this.ctx.body = `这里是测试页面，地址 ${this.req.path}`;
     }
 
-    @Inside
+    @RequestMethod.GET
+    @RequestMethod.POST
     hello() {
         this.ctx.body = 'hello.';
     }
 
     /* eslint-disable class-methods-use-this */
     // @Before()
+    @Inside
     before() {
         console.log(123456);
     }

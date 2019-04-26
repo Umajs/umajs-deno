@@ -15,7 +15,7 @@ app.use(Router());
 ```js
 // IndexController
 @Path('index')  // 根路由
-import { Before, After, Inside, Path, Methods, Controller } from 'koa-router-class';
+import { Before, After, Inside, Path, RequestMethod, Controller } from 'koa-router-class';
 
 function before() {
     console.log('before', this.req.path);
@@ -27,7 +27,10 @@ function before() {
 @Path('/index')
 export default class Index extends Controller {
 
-    @Methods.GET
+    // RequestMethod 默认全部
+    // 可以修饰一个或者多个
+    @RequestMethod.GET
+    @RequestMethod.POST
     index() {
         this.ctx.body = '这里是首页';
     }

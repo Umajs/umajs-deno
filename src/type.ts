@@ -8,7 +8,7 @@ export type IControllerInfo = {
 export type IMethodInfo = {
     path?: string,
     inside?: boolean,
-    methodType?: string, // get,post...
+    methodTypes?: string[], // get,post...
 }
 
 export type IHelper = {

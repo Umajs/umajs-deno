@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { ControllerMatch, requireDefault } from './utils';
-import { IControllerInfo, IHelper } from './type';
+import { IControllerInfo, IHelper, IMethodInfo } from './type';
 
 // ControllerMap
 export const ControllerMap: Map<Function, IControllerInfo> = new Map();
@@ -17,10 +17,10 @@ export function MergeMethodType(clazz: Function, methodName: string, methodType:
     const { methodMap } = ControllerMap.get(clazz);
     if (!methodMap) return true;
 
-    const { methodType: mt } = methodMap.get(methodName);
-    if (!mt) return true;
+    const { methodTypes } = methodMap.get(methodName);
+    if (!methodTypes || methodTypes.length === 0) return true;
 
-    return mt === methodType;
+    return methodTypes.indexOf(methodType) > -1;
 }
 
 export function readControllerDir(dirPath: string) {
@@ -53,10 +53,12 @@ export function SetController(clazz: Function, methodName: string, info: IHelper
     if (clazzName) clazzInfo.clazzName = clazzName;
     if (rootPath) clazzInfo.rootPath = rootPath;
 
-    const methodInfo = methodMap.get(methodName) || {};
+    const methodInfo: IMethodInfo = methodMap.get(methodName) || {};
     methodInfo.inside = inside || false;
     if (mpath) methodInfo.path = mpath;
-    if (methodType) methodInfo.methodType = methodType;
+    const { methodTypes = [] } = methodInfo;
+    if (methodType) methodTypes.push(methodType);
+    methodInfo.methodTypes = methodTypes;
 
     methodMap.set(methodName, methodInfo);
     clazzInfo.methodMap = methodMap;
