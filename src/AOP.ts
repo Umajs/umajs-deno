@@ -12,7 +12,7 @@ function reDefineProperty(clazz: Function, methodName: string, newMethodName: st
 export function Before(fn?: Function): Function {
     return function _before(target: Function, methodName: string, { value, configurable, enumerable }: PropertyDescriptor) {
         if (!fn) {
-            return reDefineProperty(target, methodName, '__before');
+            return reDefineProperty(target.constructor, methodName, '__before');
         }
 
         return {
@@ -32,7 +32,7 @@ export function Before(fn?: Function): Function {
 export function After(fn?: Function): Function {
     return function _after(target: Function, methodName: string, { value, configurable, enumerable }: PropertyDescriptor) {
         if (!fn) {
-            return reDefineProperty(target, methodName, '__after');
+            return reDefineProperty(target.constructor, methodName, '__after');
         }
 
         return {

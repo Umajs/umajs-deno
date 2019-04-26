@@ -22,7 +22,7 @@ export function Path(...pathArr: string[]) {
     return function Method(...props: any[]) {
         if (props.length === 1) {
             if (pathArr.length > 1) throw new Error('class only has one argument');
-            SetController(props[0], null, { rootPath: pathArr[0] });
+            return SetController(props[0], null, { rootPath: pathArr[0] });
         }
 
         const [target, methodName] = props;
