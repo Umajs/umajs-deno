@@ -47,21 +47,24 @@ export function readControllerDir(dirPath: string) {
 
 export function SetController(clazz: Function, methodName: string, info: IHelper = {}) {
     const clazzInfo: IControllerInfo = ControllerMap.get(clazz) || {};
-    const { methodMap = new Map() } = clazzInfo;
 
     const { rootPath, clazzName, path: mpath, inside, methodType } = info;
     if (clazzName) clazzInfo.clazzName = clazzName;
     if (rootPath) clazzInfo.rootPath = rootPath;
 
-    const methodInfo: IMethodInfo = methodMap.get(methodName) || {};
-    methodInfo.inside = inside || false;
-    if (mpath) methodInfo.path = mpath;
-    const { methodTypes = [] } = methodInfo;
-    if (methodType) methodTypes.push(methodType);
-    methodInfo.methodTypes = methodTypes;
+    if (methodName) {
+        const { methodMap = new Map() } = clazzInfo;
+        const methodInfo: IMethodInfo = methodMap.get(methodName) || {};
+        methodInfo.inside = inside || false;
+        if (mpath) methodInfo.path = mpath;
+        const { methodTypes = [] } = methodInfo;
+        if (methodType) methodTypes.push(methodType);
+        methodInfo.methodTypes = methodTypes;
 
-    methodMap.set(methodName, methodInfo);
-    clazzInfo.methodMap = methodMap;
+        methodMap.set(methodName, methodInfo);
+        clazzInfo.methodMap = methodMap;
+    }
+
     ControllerMap.set(clazz, clazzInfo);
 }
 

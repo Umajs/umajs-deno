@@ -45,7 +45,7 @@ const Router = (cfg = {}) => {
 
         const clazzInfo: IControllerInfo = ControllerMap.get(clazz) || {};
         const methodMap: Map<string, IMethodInfo> = clazzInfo.methodMap || new Map();
-        const { inside = false } = methodMap.get(methodName);
+        const { inside = false } = methodMap.get(methodName) || {};
         const { rootPath = '' } = clazzInfo;
 
         const pathInfo: IPathInfo = { clazz, methodName, inside };
