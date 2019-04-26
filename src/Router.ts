@@ -1,11 +1,14 @@
 import Controller from './Controller';
 import { StaticMap, MatchRegexp } from './Path';
-import { IRoute } from './type';
 import log from './log';
+import { IControllerInfo } from './type';
+import { MergeMethodType } from './ControllerHelper';
 
-export const ClazzMap: Map<String, IRoute> = new Map();
+export const ClazzMap: Map<String, IControllerInfo> = new Map();
 
-async function callMethod(clazz: any, methodName: string, params: string[], ctx: any, next: Function) {
+async function callMethod(clazz: any, methodName: string, params: string[], ctx: any, next: Function, methodType: string) {
+    if (!MergeMethodType(clazz, methodName, methodType)) return next();
+
     const instance = Reflect.construct(clazz, []);
     if (!(instance instanceof Controller)) {
         throw new Error('controller must extends Controller, { Controller } = require(\'\')');
@@ -34,21 +37,21 @@ async function callMethod(clazz: any, methodName: string, params: string[], ctx:
 
 export default async function Router(ctx: any, next: Function) {
     try {
-        const reqPath = ctx.request.path;
-        log('request path', reqPath);
+        const { path: reqPath, method } = ctx.request;
+        log('request path', reqPath, method);
 
         // static
         const staticResult = StaticMap.get(reqPath);
         if (staticResult) {
             const { clazz, methodName } = staticResult;
-            return await callMethod(clazz, methodName, [], ctx, next);
+            return await callMethod(clazz, methodName, [], ctx, next, method);
         }
 
         // regexp
         const regexpResult = MatchRegexp(reqPath);
         if (regexpResult) {
             const { clazz, methodName, params = [] } = regexpResult;
-            return await callMethod(clazz, methodName, params, ctx, next);
+            return await callMethod(clazz, methodName, params, ctx, next, method);
         }
 
         // default
@@ -57,16 +60,16 @@ export default async function Router(ctx: any, next: Function) {
         const [clazzName = 'index', methodName = 'index', ...params] = pathArr;
         if (methodName.indexOf('_') > -1) return next();
 
-        const routeInfo: IRoute = ClazzMap.get(clazzName);
+        const routeInfo: IControllerInfo = ClazzMap.get(clazzName);
         if (!routeInfo) return next();
 
-        const { clazz, pathMethodNames } = routeInfo;
+        const { clazz, methodMap } = routeInfo;
 
         // controller must be have method and not configuration path
         if (!~Reflect.ownKeys(clazz.prototype).indexOf(methodName)
-            || ~pathMethodNames.indexOf(methodName)) return next();
+            || methodMap.get(methodName).inside) return next();
 
-        return await callMethod(clazz, methodName, params, ctx, next);
+        return await callMethod(clazz, methodName, params, ctx, next, method);
     } catch (err) {
         ctx.app.emit('error', err, ctx);
     }

@@ -3,11 +3,13 @@ import * as pathToRegexp from 'path-to-regexp';
 
 import Controller from './Controller';
 import router, { ClazzMap } from './Router';
-import { readControllerDir, ControllerMap, Private } from './ControllerHelper';
+import { readControllerDir, ControllerMap, Inside, SetController } from './ControllerHelper';
 import { getConfig, setConfig } from './Config';
 import { Path, StaticMap, RouteMap } from './Path';
 import { Before, After } from './AOP';
+import Methods from './Methods';
 import log from './log';
+import { IControllerInfo, IMethodInfo, IPathInfo } from './type';
 
 const Router = (cfg = {}) => {
     setConfig(cfg);
@@ -19,10 +21,11 @@ const Router = (cfg = {}) => {
 
     readControllerDir(path.resolve(controllerRoot, 'controller'));
 
-    for (const [clazz, { clazzName, pathMethodNames }] of ControllerMap) {
-        ClazzMap.set(clazzName, { clazz, pathMethodNames });
+    for (const [clazz, clazzInfo] of ControllerMap) {
+        ClazzMap.set(clazzInfo.clazzName, { clazz, ...clazzInfo });
     }
 
+    // 配置路由
     for (const [routes, url] of routers) {
         const [, clazzName, , methodName] = url.split('/');
         if (!clazzName || !methodName) return;
@@ -30,12 +33,7 @@ const Router = (cfg = {}) => {
         const { clazz }: any = ClazzMap.get(clazzName) || {};
         if (!clazz || Reflect.get(clazz, methodName)) return;
 
-        const { pathMethodNames } = ControllerMap.get(clazz);
-        pathMethodNames.push(methodName);
-        ClazzMap.set(clazzName, {
-            clazz,
-            pathMethodNames,
-        });
+        SetController(clazz, methodName, { inside: true });
         for (const route of routes) {
             StaticMap.set(route, { clazz, methodName });
         }
@@ -45,22 +43,30 @@ const Router = (cfg = {}) => {
     for (const mp of mps) {
         const { clazz, methodName } = StaticMap.get(mp);
 
-        const clazzInfo: any = ControllerMap.get(clazz) || {};
+        const clazzInfo: IControllerInfo = ControllerMap.get(clazz) || {};
+        const methodMap: Map<string, IMethodInfo> = clazzInfo.methodMap || new Map();
+        const { inside = false, methodType } = methodMap.get(methodName);
         const { rootPath = '' } = clazzInfo;
+
+        const pathInfo: IPathInfo = { clazz, methodName, inside };
+        if (methodType) pathInfo.methodType = methodType;
 
         const methodPath = rootPath + mp;
         if (mp.indexOf(':') > -1) {
             const keys = [];
-            RouteMap.set(pathToRegexp(methodPath, keys), { clazz, methodName, keys });
+            pathInfo.keys = keys;
+            RouteMap.set(pathToRegexp(methodPath, keys), pathInfo);
         } else {
-            StaticMap.set(methodPath, { clazz, methodName });
+            StaticMap.set(methodPath, pathInfo);
         }
 
         StaticMap.delete(mp);
     }
 
-    log(StaticMap);
-    log(RouteMap);
+    log('ControllerMap', ControllerMap);
+    log('.......', ClazzMap.get('index').methodMap.get('index'));
+    log('StaticMap', StaticMap);
+    log('RouteMap', RouteMap);
 
     return router;
 };
@@ -70,6 +76,7 @@ export {
     Router,
     Before,
     After,
-    Private,
+    Inside,
+    Methods,
     Controller,
 };

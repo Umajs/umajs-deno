@@ -15,12 +15,14 @@ app.use(Router());
 ```js
 // IndexController
 @Path('index')  // 根路由
-import { Before, After, Path, Controller } from '../../src/index';
+import { Before, After, Inside, Path, Methods, Controller } from 'koa-router-class';
 
 // Path 修饰class 时，参数为根路由(参数只能一个)
 // Path 修饰method 时，参数为方法路由(参数可有多个)
 @Path('/index')
 export default class Index extends Controller {
+
+    @Methods.GET
     index() {
         this.ctx.body = '这里是首页';
     }
@@ -39,10 +41,13 @@ export default class Index extends Controller {
         this.ctx.body = `这里是测试页面，地址 ${this.req.path}`;
     }
 
+    // 私有化方法
+    @Inside
     before() {
         console.log(123456);
     }
 
+    // 勾子函数，action 调用结束后触发
     @After()
     after() {
         console.log('after');

@@ -1,9 +1,11 @@
-import { Before, After, Private, Path, Controller } from '../../src/index';
+import { Before, After, Inside, Path, Methods, Controller } from '../../src/index';
 
 @Path('/index')
 export default class Index extends Controller {
 
     // @Private
+    // @Get
+    @Methods.POST
     index() {
         this.ctx.body = '这里是首页';
     }
@@ -18,7 +20,7 @@ export default class Index extends Controller {
         this.ctx.body = `这里是测试页面，地址 ${this.req.path}`;
     }
 
-    @Private
+    @Inside
     hello() {
         this.ctx.body = 'hello.';
     }
