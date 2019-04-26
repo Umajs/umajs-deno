@@ -14,7 +14,6 @@ app.use(Router());
 
 ```js
 // IndexController
-@Path('index')  // 根路由
 import { Before, After, Inside, Path, RequestMethod, Controller } from 'koa-router-class';
 
 function before() {
@@ -24,7 +23,7 @@ function before() {
 
 // Path 修饰class 时，参数为根路由(参数只能一个)
 // Path 修饰method 时，参数为方法路由(参数可有多个)
-@Path('/index')
+@Path('index')  // 根路由
 export default class Index extends Controller {
 
     // RequestMethod 默认全部
