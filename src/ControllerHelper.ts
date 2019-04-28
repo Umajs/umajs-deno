@@ -71,3 +71,13 @@ export function SetController(clazz: Function, methodName: string, info: IHelper
 export function Inside(target: any, methodName: string) {
     SetController(target.constructor, methodName, { inside: true });
 }
+
+export const controllers: any = new Proxy({}, {
+    get(_, clazzName: string) {
+        return new Proxy({}, {
+            get(__, methodName: string) {
+                return `/${clazzName}/${methodName}`;
+            },
+        });
+    },
+});

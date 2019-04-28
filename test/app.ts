@@ -3,13 +3,13 @@ import * as path from 'path';
 
 process.env.ROUTE_ENV_TYPE = 'dev';
 const { Router } = require('../src/index');
+import routers from './routers';
 
 const app = new Koa();
 
 app.use(Router({
     controllerRoot: path.resolve(process.cwd(), 'test'),
-    routers: [
-    ],
+    routers,
 }));
 
 // response

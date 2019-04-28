@@ -3,7 +3,7 @@ import * as pathToRegexp from 'path-to-regexp';
 
 import Controller from './Controller';
 import router, { ClazzMap } from './Router';
-import { readControllerDir, ControllerMap, Inside, SetController } from './ControllerHelper';
+import { readControllerDir, ControllerMap, Inside, SetController, controllers } from './ControllerHelper';
 import { getConfig, setConfig } from './Config';
 import { Path, StaticMap, RouteMap } from './Path';
 import { Before, After } from './AOP';
@@ -26,16 +26,16 @@ const Router = (cfg = {}) => {
     }
 
     // 配置路由
-    for (const [routes, url] of routers) {
-        const [, clazzName, , methodName] = url.split('/');
-        if (!clazzName || !methodName) return;
+    for (const [routes, url, methodType] of routers) {
+        const [, clazzName, methodName] = url.split('/');
+        if (!clazzName || !methodName) continue;
 
         const { clazz }: any = ClazzMap.get(clazzName) || {};
-        if (!clazz || Reflect.get(clazz, methodName)) return;
+        if (!clazz || Reflect.get(clazz, methodName)) continue;
 
-        SetController(clazz, methodName, { inside: true });
+        SetController(clazz, methodName, { inside: true, methodType });
         for (const route of routes) {
-            StaticMap.set(route, { clazz, methodName });
+            StaticMap.set(route, { clazz, methodName, methodType });
         }
     }
 
@@ -76,4 +76,5 @@ export {
     Inside,
     RequestMethod,
     Controller,
+    controllers,
 };

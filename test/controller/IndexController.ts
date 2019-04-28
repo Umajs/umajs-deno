@@ -34,6 +34,10 @@ export default class Index extends Controller {
         console.log(123456);
     }
 
+    hehe() {
+        this.ctx.body = 'hehe';
+    }
+
     @After()
     after() {
         console.log('after');
