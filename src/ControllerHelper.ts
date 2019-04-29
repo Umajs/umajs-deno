@@ -76,6 +76,7 @@ export const controllers: any = new Proxy({}, {
     get(_, clazzName: string) {
         return new Proxy({}, {
             get(__, methodName: string) {
+                if (typeof methodName !== 'string') return {};
                 return `/${clazzName}/${methodName}`;
             },
         });

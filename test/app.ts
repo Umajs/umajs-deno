@@ -7,6 +7,12 @@ import routers from './routers';
 
 const app = new Koa();
 
+app.use(async (ctx, next) => {
+    console.log('---koa before---');
+    await next();
+    console.log('===koa after ===');
+});
+
 app.use(Router({
     controllerRoot: path.resolve(process.cwd(), 'test'),
     routers,

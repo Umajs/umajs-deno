@@ -26,18 +26,18 @@ const Router = (cfg = {}) => {
     }
 
     // 配置路由
-    for (const [routes, url, methodType] of routers) {
+    routers.forEach(([routes, url, methodType]) => {
         const [, clazzName, methodName] = url.split('/');
-        if (!clazzName || !methodName) continue;
+        if (!clazzName || !methodName) return;
 
         const { clazz }: any = ClazzMap.get(clazzName) || {};
-        if (!clazz || Reflect.get(clazz, methodName)) continue;
+        if (!clazz || Reflect.get(clazz, methodName)) return;
 
         SetController(clazz, methodName, { inside: true, methodType });
         for (const route of routes) {
             StaticMap.set(route, { clazz, methodName, methodType });
         }
-    }
+    });
 
     const mps = [...StaticMap.keys()];
     for (const mp of mps) {
