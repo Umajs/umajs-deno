@@ -1,4 +1,4 @@
-import { Before, After, Inside, Path, RequestMethod, Controller } from '../../src/index';
+import { Before, After, Private, Path, RequestMethod, Controller } from '../../src/index';
 
 function before() {
     console.log('before', this.req.path);
@@ -29,7 +29,7 @@ export default class Index extends Controller {
 
     /* eslint-disable class-methods-use-this */
     // @Before()
-    @Inside
+    @Private
     before() {
         console.log(123456);
     }

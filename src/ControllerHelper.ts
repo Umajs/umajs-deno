@@ -68,7 +68,7 @@ export function SetController(clazz: Function, methodName: string, info: IHelper
     ControllerMap.set(clazz, clazzInfo);
 }
 
-export function Inside(target: any, methodName: string) {
+export function Private(target: any, methodName: string) {
     SetController(target.constructor, methodName, { inside: true });
 }
 

@@ -10,3 +10,14 @@ export default new Proxy(obj, {
         };
     },
 });
+
+/**
+ */
+// export default function RequestMethod(...methods: string[]) {
+//     return function Method(...props: any[]) {
+//         const [target, methodName] = props;
+//         methods.forEach((key) => {
+//             SetController(target.constructor, methodName, { methodType: key });
+//         });
+//     };
+// }

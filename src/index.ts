@@ -3,7 +3,7 @@ import * as pathToRegexp from 'path-to-regexp';
 
 import Controller from './Controller';
 import router, { ClazzMap } from './Router';
-import { readControllerDir, ControllerMap, Inside, SetController, controllers } from './ControllerHelper';
+import { readControllerDir, ControllerMap, Private, SetController, controllers } from './ControllerHelper';
 import { getConfig, setConfig } from './Config';
 import { Path, StaticMap, RouteMap } from './Path';
 import { Before, After } from './AOP';
@@ -50,7 +50,7 @@ const Router = (cfg = {}) => {
 
         const pathInfo: IPathInfo = { clazz, methodName, inside };
         const methodPath = rootPath + mp;
-        if (mp.indexOf(':') > -1) {
+        if (mp.indexOf(':') > -1 || mp.indexOf('(') > -1) {
             const keys = [];
             pathInfo.keys = keys;
             RouteMap.set(pathToRegexp(methodPath, keys), pathInfo);
@@ -73,7 +73,7 @@ export {
     Router,
     Before,
     After,
-    Inside,
+    Private,
     RequestMethod,
     Controller,
     controllers,
