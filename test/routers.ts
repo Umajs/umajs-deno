@@ -3,10 +3,12 @@ import { controllers } from '../src/index';
 enum Method {
     GET,
     POST,
-    DELETE,
     PUT,
     OPTION,
-    UPDATE,
+    HEAD,
+    DELETE,
+    TRACE,
+    CONNECT,
 }
 
 export default [
