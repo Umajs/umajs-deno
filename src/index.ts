@@ -3,7 +3,7 @@ import * as pathToRegexp from 'path-to-regexp';
 
 import Controller from './Controller';
 import router, { ClazzMap } from './Router';
-import { readControllerDir, ControllerMap, Private, SetController, controllers } from './ControllerHelper';
+import { LoadControllers, ControllerMap, Private, SetController, controllers } from './ControllerHelper';
 import { getConfig, setConfig } from './Config';
 import { Path, StaticMap, RouteMap } from './Path';
 import { Before, After } from './AOP';
@@ -19,7 +19,7 @@ const Router = (cfg = {}) => {
         routers = [],
     } = getConfig();
 
-    readControllerDir(path.resolve(controllerRoot, 'controller'));
+    LoadControllers(path.resolve(controllerRoot, 'controller'));
 
     for (const [clazz, clazzInfo] of ControllerMap) {
         ClazzMap.set(clazzInfo.clazzName, { clazz, ...clazzInfo });

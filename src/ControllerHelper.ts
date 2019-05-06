@@ -23,7 +23,7 @@ export function MergeMethodType(clazz: Function, methodName: string, methodType:
     return methodTypes.indexOf(methodType) > -1;
 }
 
-export function readControllerDir(dirPath: string) {
+export function LoadControllers(dirPath: string) {
     console.assert(fs.existsSync(dirPath), `controller file path is not exists, path:${dirPath}`);
 
     const files = fs.readdirSync(dirPath);
@@ -31,7 +31,7 @@ export function readControllerDir(dirPath: string) {
         console.log(file);
         const filePath = path.resolve(dirPath, file);
         if (fs.statSync(filePath).isDirectory()) {
-            return readControllerDir(filePath);
+            return LoadControllers(filePath);
         }
 
         const controllerResult = ControllerMatch(filePath);
