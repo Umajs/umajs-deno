@@ -5,6 +5,27 @@ export = WF;
 declare namespace WF {
 
     /**
+     * 单条路由配置，如下：
+     * [['/r1', '/r2/:name'], controllers.r2.name, 'GET']
+     * [['/r1', '/r2/:name'], '/r2/name', ['GET', 'POST']]
+     */
+    export type router = [string[], string, string?];
+
+    /**
+     * 路由参数
+     */
+    export type routerOptions = {
+        controllerRoot: string,
+        controllerSuffix: string,
+        routers: router[],
+    }
+
+    /**
+     * Router 路由
+     */
+    export function Router(options?: routerOptions): Koa.Middleware;
+
+    /**
      * Before 修饰器
      * 当 Before 没有函数参数时，当前方法被声明为此 class 的勾子函数，所有 action 触发都会先调用此方法
      * 当 Before 有函数参数时， 函数参数为当前 action 的勾子函数，调用此 action 都会条用函数参数
