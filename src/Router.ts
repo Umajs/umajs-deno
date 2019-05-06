@@ -36,41 +36,37 @@ async function callMethod(clazz: any, methodName: string, params: string[], ctx:
 }
 
 export default async function Router(ctx: any, next: Function) {
-    try {
-        const { path: reqPath, method } = ctx.request;
-        log('request path', reqPath, method);
+    const { path: reqPath, method } = ctx.request;
+    log('request path', reqPath, method);
 
-        // static
-        const staticResult = StaticMap.get(reqPath);
-        if (staticResult) {
-            const { clazz, methodName } = staticResult;
-            return await callMethod(clazz, methodName, [], ctx, next, method);
-        }
-
-        // regexp
-        const regexpResult = MatchRegexp(reqPath);
-        if (regexpResult) {
-            const { clazz, methodName, params = [] } = regexpResult;
-            return await callMethod(clazz, methodName, params, ctx, next, method);
-        }
-
-        // default
-        const url = reqPath.slice(1);
-        const pathArr: string[] = url ? url.split('/') : [];
-        const [clazzName = 'index', methodName = 'index', ...params] = pathArr;
-        if (methodName.indexOf('_') > -1) return next();
-
-        const routeInfo: IControllerInfo = ClazzMap.get(clazzName);
-        if (!routeInfo) return next();
-
-        const { clazz, methodMap } = routeInfo;
-
-        // controller must be have method and not configuration path
-        if (!~Reflect.ownKeys(clazz.prototype).indexOf(methodName)
-            || methodMap.get(methodName).inside) return next();
-
-        return await callMethod(clazz, methodName, params, ctx, next, method);
-    } catch (err) {
-        ctx.app.emit('error', err, ctx);
+    // static
+    const staticResult = StaticMap.get(reqPath);
+    if (staticResult) {
+        const { clazz, methodName } = staticResult;
+        return await callMethod(clazz, methodName, [], ctx, next, method);
     }
+
+    // regexp
+    const regexpResult = MatchRegexp(reqPath);
+    if (regexpResult) {
+        const { clazz, methodName, params = [] } = regexpResult;
+        return await callMethod(clazz, methodName, params, ctx, next, method);
+    }
+
+    // default
+    const url = reqPath.slice(1);
+    const pathArr: string[] = url ? url.split('/') : [];
+    const [clazzName = 'index', methodName = 'index', ...params] = pathArr;
+    if (methodName.indexOf('_') > -1) return next();
+
+    const routeInfo: IControllerInfo = ClazzMap.get(clazzName);
+    if (!routeInfo) return next();
+
+    const { clazz, methodMap } = routeInfo;
+
+    // controller must be have method and not configuration path
+    if (!~Reflect.ownKeys(clazz.prototype).indexOf(methodName)
+        || methodMap.get(methodName).inside) return next();
+
+    return await callMethod(clazz, methodName, params, ctx, next, method);
 }
