@@ -9,14 +9,12 @@ export const ClazzMap: Map<String, IControllerInfo> = new Map();
 async function callMethod(clazz: any, methodName: string, params: string[], ctx: any, next: Function, methodType: string) {
     if (!MergeMethodType(clazz, methodName, methodType)) return next();
 
-    const instance = Reflect.construct(clazz, []);
+    const instance = Reflect.construct(clazz, [ctx, next]);
     if (!(instance instanceof Controller)) {
         throw new Error('controller must extends Controller, { Controller } = require(\'\')');
     }
 
     /* eslint-disable no-underscore-dangle */
-    instance._ctx = { ctx, next };
-    Reflect.defineProperty(instance, '_ctx', {});
     const { __before, __after } = instance;
 
     if (__before) {
