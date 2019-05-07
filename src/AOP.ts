@@ -1,4 +1,5 @@
 import { SetController } from './ControllerHelper';
+import { interceptors } from './Interceptor';
 
 function reDefineProperty(clazz: Function, methodName: string, newMethodName: string) {
     SetController(clazz, methodName);
@@ -9,10 +10,10 @@ function reDefineProperty(clazz: Function, methodName: string, newMethodName: st
     });
 }
 
-export function Before(fn?: Function): Function {
+export function Before(interceptorName?: string): Function {
     return function _before(target: Function, methodName: string, { value, configurable, enumerable }: PropertyDescriptor) {
-        if (!fn) {
-            return reDefineProperty(target.constructor, methodName, '__before');
+        if (!interceptorName) {
+            return reDefineProperty(target, methodName, '__before');
         }
 
         return {
@@ -20,7 +21,7 @@ export function Before(fn?: Function): Function {
             enumerable,
             get() {
                 return async function before(...props: any[]) {
-                    const beforeResult = await Promise.resolve(Reflect.apply(fn, this, []));
+                    const beforeResult = await Promise.resolve(Reflect.apply(interceptors[interceptorName], this, []));
                     if (beforeResult === false) return;
                     return value.apply(this, props);
                 }.bind(this);
@@ -29,10 +30,10 @@ export function Before(fn?: Function): Function {
     };
 }
 
-export function After(fn?: Function): Function {
+export function After(interceptorName?: string): Function {
     return function _after(target: Function, methodName: string, { value, configurable, enumerable }: PropertyDescriptor) {
-        if (!fn) {
-            return reDefineProperty(target.constructor, methodName, '__after');
+        if (!interceptorName) {
+            return reDefineProperty(target, methodName, '__after');
         }
 
         return {
@@ -41,7 +42,7 @@ export function After(fn?: Function): Function {
             get() {
                 return async function after(...props: any[]) {
                     await Promise.resolve(Reflect.apply(value, this, props));
-                    return fn.apply(this);
+                    return interceptors[interceptorName].apply(this);
                 }.bind(this);
             },
         };

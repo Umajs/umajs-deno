@@ -1,10 +1,5 @@
 import { Before, After, Private, Path, RequestMethod, Controller } from '../../src/index';
 
-function before() {
-    console.log('before', this.req.path);
-    // return false;
-}
-
 @Path('/index')
 export default class Index extends Controller {
 
@@ -14,7 +9,7 @@ export default class Index extends Controller {
         this.ctx.body = '这里是首页';
     }
 
-    @Before(before)
+    @Before('Before')
     @Path('/test/:name', '/test2')
     test(name: string) {
         console.log('......', name);
@@ -28,10 +23,10 @@ export default class Index extends Controller {
     }
 
     /* eslint-disable class-methods-use-this */
-    // @Before()
+    @Before()
     @Private
     before() {
-        console.log(123456);
+        console.log('=-=Before decorator', 123456);
     }
 
     hehe() {
@@ -40,6 +35,6 @@ export default class Index extends Controller {
 
     @After()
     after() {
-        console.log('after');
+        console.log('-=-After decorator', 654321);
     }
 }

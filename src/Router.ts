@@ -16,6 +16,7 @@ async function callMethod(clazz: any, methodName: string, params: string[], ctx:
 
     /* eslint-disable no-underscore-dangle */
     const { __before, __after } = instance;
+    log(__before, __after);
 
     if (__before) {
         const beforeResult = await Promise.resolve(Reflect.apply(__before, instance, []));

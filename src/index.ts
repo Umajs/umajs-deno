@@ -1,4 +1,3 @@
-import * as path from 'path';
 import * as pathToRegexp from 'path-to-regexp';
 
 import Controller from './Controller';
@@ -10,16 +9,20 @@ import { Before, After } from './AOP';
 import RequestMethod from './RequestMethod';
 import log from './log';
 import { IControllerInfo, IMethodInfo, IPathInfo } from './type';
+import LoadInterceptor from './Interceptor';
 
 const Router = (cfg = {}) => {
     setConfig(cfg);
 
     const {
-        controllerRoot,
+        controllerPath,
+        interceptorPath,
         routers = [],
     } = getConfig();
 
-    LoadControllers(path.resolve(controllerRoot, 'controller'));
+    LoadControllers(controllerPath);
+
+    LoadInterceptor(interceptorPath);
 
     for (const [clazz, clazzInfo] of ControllerMap) {
         ClazzMap.set(clazzInfo.clazzName, { clazz, ...clazzInfo });

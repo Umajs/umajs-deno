@@ -15,8 +15,9 @@ declare namespace WF {
      * 路由参数
      */
     export type routerOptions = {
-        controllerRoot?: string,
-        controllerSuffix?: string,
+        controllerPath?: string,    // default /src/controller
+        interceptorPath?: string,   // default /src/interceptor
+        controllerSuffix?: string,  // default Controller
         routers?: router[],
     }
 
