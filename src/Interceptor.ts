@@ -6,7 +6,7 @@ import { requireDefault } from './utils';
 export const interceptors: any = {};
 
 export default function LoadInterceptor(dirPath: string) {
-    console.assert(fs.existsSync(dirPath), `controller file path is not exists, path:${dirPath}`);
+    console.assert(fs.existsSync(dirPath), `interceptor file path is not exists, path:${dirPath}`);
 
     const files = fs.readdirSync(dirPath);
     for (const file of files) {
