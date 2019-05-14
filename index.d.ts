@@ -16,7 +16,7 @@ declare namespace WF {
      */
     export type routerOptions = {
         controllerPath?: string,    // default /src/controller
-        interceptorPath?: string,   // default /src/interceptor
+        aopPath?: string,   // default /src/interceptor
         controllerSuffix?: string,  // default Controller
         routers?: router[],
     }
@@ -63,17 +63,19 @@ declare namespace WF {
 
     /**
      * 访问 method
+     * GET, POST, PUT, OPTION, HEAD, DELETE, TRACE, CONNECT
      */
-    export namespace RequestMethod {
-        export const GET: Function;
-        export const POST: Function;
-        export const PUT: Function;
-        export const OPTION: Function;
-        export const HEAD: Function;
-        export const DELETE: Function;
-        export const TRACE: Function;
-        export const CONNECT: Function;
-    }
+    export function RequestMethod(...methods: string[]): Function;
+    // export namespace RequestMethod {
+    //     export const GET: Function;
+    //     export const POST: Function;
+    //     export const PUT: Function;
+    //     export const OPTION: Function;
+    //     export const HEAD: Function;
+    //     export const DELETE: Function;
+    //     export const TRACE: Function;
+    //     export const CONNECT: Function;
+    // }
 
     /**
      * Controller 基类，提供一些基本方法

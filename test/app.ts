@@ -15,7 +15,7 @@ app.use(async (ctx, next) => {
 
 app.use(Router({
     controllerPath: path.resolve(process.cwd(), 'test/controller'),
-    interceptorPath: path.resolve(process.cwd(), 'test/interceptor'),
+    aopPath: path.resolve(process.cwd(), 'test/aop'),
     routers,
 }));
 

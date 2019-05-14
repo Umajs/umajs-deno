@@ -5,24 +5,23 @@ import router, { ClazzMap } from './Router';
 import { LoadControllers, ControllerMap, Private, SetController, controllers } from './ControllerHelper';
 import { getConfig, setConfig } from './Config';
 import { Path, StaticMap, RouteMap } from './Path';
-import { Before, After } from './AOP';
+import { LoadAop, Before, After } from './AOP';
 import RequestMethod from './RequestMethod';
 import log from './log';
 import { IControllerInfo, IMethodInfo, IPathInfo } from './type';
-import LoadInterceptor from './Interceptor';
 
 const Router = (cfg = {}) => {
     setConfig(cfg);
 
     const {
         controllerPath,
-        interceptorPath,
+        aopPath,
         routers = [],
     } = getConfig();
 
     LoadControllers(controllerPath);
 
-    LoadInterceptor(interceptorPath);
+    aopPath && LoadAop(aopPath);
 
     for (const [clazz, clazzInfo] of ControllerMap) {
         ClazzMap.set(clazzInfo.clazzName, { clazz, ...clazzInfo });

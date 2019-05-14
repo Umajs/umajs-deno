@@ -29,9 +29,7 @@ function before() {
 export default class Index extends Controller {
 
     // RequestMethod 默认全部
-    // 可以修饰一个或者多个
-    @RequestMethod.GET
-    @RequestMethod.POST
+    @RequestMethod('GET')
     index() {
         this.ctx.body = '这里是首页';
     }
@@ -42,13 +40,14 @@ export default class Index extends Controller {
     // after 同理
     @Before(before)
     @Path('/test/:name', '/test2')
+    @RequestMethod('GET', 'POST')
     test(name: string) {
         console.log('......', name);
         this.ctx.body = `这里是测试页面，地址 ${this.req.path}`;
     }
 
     // 私有化方法，默认路由不会进入此 action
-    @Inside
+    @Private
     before() {
         console.log(123456);
     }

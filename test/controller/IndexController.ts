@@ -4,7 +4,7 @@ import { Before, After, Private, Path, RequestMethod, Controller } from '../../s
 export default class Index extends Controller {
 
     // @Private
-    @RequestMethod.GET
+    @RequestMethod('GET')
     index() {
         this.ctx.body = '这里是首页';
     }
@@ -16,8 +16,7 @@ export default class Index extends Controller {
         this.ctx.body = `这里是测试页面，地址 ${this.req.path}`;
     }
 
-    @RequestMethod.GET
-    @RequestMethod.POST
+    @RequestMethod('GET', 'POST')
     hello() {
         this.ctx.body = 'hello.';
     }

@@ -2,7 +2,7 @@ import * as path from 'path';
 
 const config = {
     controllerPath: path.resolve(process.cwd(), 'src/controller'),
-    interceptorPath: path.resolve(process.cwd(), 'src/interceptor'),
+    aopPath: null, // path.resolve(process.cwd(), 'src/aop'),
     controllerSuffix: 'Controller',
     routers: [],
 };
