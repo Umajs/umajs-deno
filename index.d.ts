@@ -31,16 +31,16 @@ declare namespace WF {
      * 当 Before 没有函数参数时，当前方法被声明为此 class 的勾子函数，所有 action 触发都会先调用此方法
      * 当 Before 有函数参数时， 函数参数为当前 action 的勾子函数，调用此 action 都会条用函数参数
      * 函数返回 false 时，action 不执行
-     * @param interceptorName 勾子函数，此参数单独配置 拦截器 文件， 例如配置 Before('Login') 会自动加载拦截器目录下 Login 文件
+     * @param aopName 勾子函数，此参数单独配置 拦截器 文件， 例如配置 Before('Login') 会自动加载拦截器目录下 Login 文件
      */
-    export function Before(interceptorName?: string): Function;
+    export function Before(aopName?: string): Function;
 
     /**
      * After 修饰器
      * 使用说明参考 Before 修饰器
-     * @param interceptorName 勾子函数，此参数单独配置 拦截器 文件
+     * @param aopName 勾子函数，此参数单独配置 拦截器 文件
      */
-    export function After(interceptorName?: string): Function;
+    export function After(aopName?: string): Function;
 
     /**
      * Path 修饰器

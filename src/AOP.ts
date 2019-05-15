@@ -30,9 +30,9 @@ function reDefineProperty(clazz: Function, methodName: string, newMethodName: st
     });
 }
 
-export function Before(interceptorName?: string): Function {
+export function Before(aopName?: string): Function {
     return function _before(target: Function, methodName: string, { value, configurable, enumerable }: PropertyDescriptor) {
-        if (!interceptorName) {
+        if (!aopName) {
             return reDefineProperty(target, methodName, '__before');
         }
 
@@ -41,7 +41,7 @@ export function Before(interceptorName?: string): Function {
             enumerable,
             get() {
                 return async function before(...props: any[]) {
-                    const beforeResult = await Promise.resolve(Reflect.apply(aops[interceptorName], this, []));
+                    const beforeResult = await Promise.resolve(Reflect.apply(aops[aopName], this, []));
                     if (beforeResult === false) return;
                     return value.apply(this, props);
                 }.bind(this);
@@ -50,9 +50,9 @@ export function Before(interceptorName?: string): Function {
     };
 }
 
-export function After(interceptorName?: string): Function {
+export function After(aopName?: string): Function {
     return function _after(target: Function, methodName: string, { value, configurable, enumerable }: PropertyDescriptor) {
-        if (!interceptorName) {
+        if (!aopName) {
             return reDefineProperty(target, methodName, '__after');
         }
 
@@ -62,7 +62,7 @@ export function After(interceptorName?: string): Function {
             get() {
                 return async function after(...props: any[]) {
                     await Promise.resolve(Reflect.apply(value, this, props));
-                    return aops[interceptorName].apply(this);
+                    return aops[aopName].apply(this);
                 }.bind(this);
             },
         };
