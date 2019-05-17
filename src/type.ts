@@ -2,6 +2,8 @@ export type IControllerInfo = {
     clazz?: Function,
     clazzName?: string,
     rootPath?: string,
+    before?: Function,
+    after?: Function,
     methodMap?: Map<string, IMethodInfo>,
 };
 
@@ -17,6 +19,8 @@ export type IHelper = {
     path?: string,
     inside?: boolean,
     methodType?: string,
+    before?: Function,
+    after?: Function,
 }
 
 export type IPathInfo = {

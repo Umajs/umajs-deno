@@ -21,19 +21,18 @@ export function LoadAop(dirPath: string) {
     }
 }
 
+/* 写入到 ControllerMap 中 */
 function reDefineProperty(clazz: Function, methodName: string, newMethodName: string) {
-    SetController(clazz, methodName);
-    Reflect.defineProperty(clazz, newMethodName, {
-        get() {
-            return Reflect.get(clazz, methodName).bind(this);
-        },
+    SetController(clazz.constructor, methodName, {
+        inside: true,
+        [newMethodName]: Reflect.get(clazz, methodName),
     });
 }
 
 export function Before(aopName?: string): Function {
     return function _before(target: Function, methodName: string, { value, configurable, enumerable }: PropertyDescriptor) {
         if (!aopName) {
-            return reDefineProperty(target, methodName, '__before');
+            return reDefineProperty(target, methodName, 'before');
         }
 
         return {
@@ -52,7 +51,7 @@ export function Before(aopName?: string): Function {
 export function After(aopName?: string): Function {
     return function _after(target: Function, methodName: string, { value, configurable, enumerable }: PropertyDescriptor) {
         if (!aopName) {
-            return reDefineProperty(target, methodName, '__after');
+            return reDefineProperty(target, methodName, 'after');
         }
 
         return {

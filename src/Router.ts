@@ -2,7 +2,7 @@ import Controller from './Controller';
 import { StaticMap, MatchRegexp } from './Path';
 import log from './log';
 import { IControllerInfo } from './type';
-import { MergeMethodType } from './ControllerHelper';
+import { MergeMethodType, ControllerMap } from './ControllerHelper';
 
 export const ClazzMap: Map<String, IControllerInfo> = new Map();
 
@@ -14,11 +14,11 @@ async function callMethod(clazz: any, methodName: string, params: string[], ctx:
         throw new Error('controller must extends Controller, { Controller } = require(\'\')');
     }
 
-    /* eslint-disable no-underscore-dangle */
-    const { __before, __after } = instance;
+    // 几次调用 ControllerMap，可以优化
+    const { before, after } = ControllerMap.get(clazz);
 
-    if (__before) {
-        const beforeResult = await Promise.resolve(Reflect.apply(__before, instance, []));
+    if (before) {
+        const beforeResult = await Promise.resolve(Reflect.apply(before, instance, []));
         if (beforeResult === false) return;
     }
 
@@ -26,8 +26,8 @@ async function callMethod(clazz: any, methodName: string, params: string[], ctx:
     const methodResult = await Promise.resolve(Reflect.apply(method, instance, params));
     if (methodResult === false) return methodResult;
 
-    if (__after) {
-        await Promise.resolve(Reflect.apply(__after, instance, []));
+    if (after) {
+        await Promise.resolve(Reflect.apply(after, instance, []));
     }
 
     return methodResult;

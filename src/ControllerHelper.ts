@@ -51,9 +51,11 @@ export function LoadControllers(dirPath: string) {
 export function SetController(clazz: Function, methodName: string, info: IHelper = {}) {
     const clazzInfo: IControllerInfo = ControllerMap.get(clazz) || {};
 
-    const { rootPath, clazzName, path: mpath, inside, methodType } = info;
+    const { rootPath, clazzName, path: mpath, inside, methodType, before, after } = info;
     if (clazzName) clazzInfo.clazzName = clazzName;
     if (rootPath) clazzInfo.rootPath = rootPath;
+    if (before) clazzInfo.before = before;
+    if (after) clazzInfo.after = after;
 
     if (methodName) {
         const { methodMap = new Map() } = clazzInfo;
