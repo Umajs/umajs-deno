@@ -1,12 +1,12 @@
 {
   "name": "koa-router-class",
-  "version": "0.2.0",
+  "version": "0.2.4",
   "main": "dist/index.js",
   "scripts": {
     "test": "mocha test",
     "lint": "esw src --clear -w --ext .ts",
     "start": "parallelshell 'npm run lint' 'tsc -w --inlineSourceMap'",
-    "app": "ts-node-dev test/app.ts",
+    "app": "ts-node-dev app/app.ts",
     "prebuild": "esw src --clear --ext .ts",
     "build": "tsc",
     "prepublish": "npm run build"

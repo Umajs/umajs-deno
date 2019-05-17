@@ -24,7 +24,7 @@ export function LoadAop(dirPath: string) {
 function reDefineProperty(clazz: Function, methodName: string, newMethodName: string) {
     SetController(clazz, methodName);
     Reflect.defineProperty(clazz, newMethodName, {
-        get: function get() {
+        get() {
             return Reflect.get(clazz, methodName).bind(this);
         },
     });
@@ -39,12 +39,11 @@ export function Before(aopName?: string): Function {
         return {
             configurable,
             enumerable,
-            get() {
-                return async function before(...props: any[]) {
-                    const beforeResult = await Promise.resolve(Reflect.apply(aops[aopName], this, []));
-                    if (beforeResult === false) return;
-                    return value.apply(this, props);
-                }.bind(this);
+            writable: true,
+            value: async function before(...props: any[]) {
+                const beforeResult = await Promise.resolve(Reflect.apply(aops[aopName], this, []));
+                if (beforeResult === false) return;
+                return value.apply(this, props);
             },
         };
     };
@@ -59,11 +58,10 @@ export function After(aopName?: string): Function {
         return {
             configurable,
             enumerable,
-            get() {
-                return async function after(...props: any[]) {
-                    await Promise.resolve(Reflect.apply(value, this, props));
-                    return aops[aopName].apply(this);
-                }.bind(this);
+            writable: true,
+            value: async function after(...props: any[]) {
+                await Promise.resolve(Reflect.apply(value, this, props));
+                return aops[aopName].apply(this);
             },
         };
     };

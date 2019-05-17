@@ -17,7 +17,10 @@ export function MergeMethodType(clazz: Function, methodName: string, methodType:
     const { methodMap } = ControllerMap.get(clazz);
     if (!methodMap) return true;
 
-    const { methodTypes } = methodMap.get(methodName);
+    const methodInfo = methodMap.get(methodName);
+    if (!methodInfo) return true;
+
+    const { methodTypes } = methodInfo;
     if (!methodTypes || methodTypes.length === 0) return true;
 
     return methodTypes.indexOf(methodType) > -1;

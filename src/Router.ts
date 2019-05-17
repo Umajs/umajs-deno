@@ -16,7 +16,6 @@ async function callMethod(clazz: any, methodName: string, params: string[], ctx:
 
     /* eslint-disable no-underscore-dangle */
     const { __before, __after } = instance;
-    log(__before, __after);
 
     if (__before) {
         const beforeResult = await Promise.resolve(Reflect.apply(__before, instance, []));
@@ -63,9 +62,10 @@ export default async function Router(ctx: any, next: Function) {
 
     const { clazz, methodMap } = routeInfo;
 
+    console.log('methodMap', methodMap.get(methodName));
     // controller must be have method and not configuration path
     if (!~Reflect.ownKeys(clazz.prototype).indexOf(methodName)
-        || methodMap.get(methodName).inside) return next();
+        || (methodMap.get(methodName) && methodMap.get(methodName).inside)) return next();
 
     return await callMethod(clazz, methodName, params, ctx, next, method);
 }

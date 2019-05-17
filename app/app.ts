@@ -8,14 +8,19 @@ import routers from './routers';
 const app = new Koa();
 
 app.use(async (ctx, next) => {
-    console.log('---koa before---');
+    if (ctx.request.path === '/favicon.ico') return;
     await next();
-    console.log('===koa after ===');
+});
+
+app.use(async (ctx, next) => {
+    console.log('-----koa before-----');
+    await next();
+    console.log('-----koa after------');
 });
 
 app.use(Router({
-    controllerPath: path.resolve(process.cwd(), 'test/controller'),
-    aopPath: path.resolve(process.cwd(), 'test/aop'),
+    controllerPath: path.resolve(process.cwd(), 'app/controller'),
+    aopPath: path.resolve(process.cwd(), 'app/aop'),
     routers,
 }));
 
