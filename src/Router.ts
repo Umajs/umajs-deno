@@ -2,11 +2,11 @@ import Controller from './Controller';
 import { StaticMap, MatchRegexp } from './Path';
 import log from './log';
 import { IControllerInfo } from './type';
-import { MergeMethodType, ControllerMap } from './ControllerHelper';
+import { MergeMethodType } from './ControllerHelper';
 
 export const ClazzMap: Map<String, IControllerInfo> = new Map();
 
-async function callMethod(clazz: any, methodName: string, params: string[], ctx: any, next: Function, methodType: string) {
+async function callMethod(clazz: Function, methodName: string, params: string[], ctx: any, next: Function, methodType: string) {
     if (!MergeMethodType(clazz, methodName, methodType)) return next();
 
     const instance = Reflect.construct(clazz, [ctx, next]);
@@ -14,11 +14,10 @@ async function callMethod(clazz: any, methodName: string, params: string[], ctx:
         throw new Error('controller must extends Controller, { Controller } = require(\'\')');
     }
 
-    // 几次调用 ControllerMap，可以优化
-    const { before, after } = ControllerMap.get(clazz);
-
-    if (before) {
-        const beforeResult = await Promise.resolve(Reflect.apply(before, instance, []));
+    const { __before, __after } = instance;
+    console.log(__before, __after);
+    if (__before) {
+        const beforeResult = await Promise.resolve(Reflect.apply(__before, instance, []));
         if (beforeResult === false) return;
     }
 
@@ -26,8 +25,8 @@ async function callMethod(clazz: any, methodName: string, params: string[], ctx:
     const methodResult = await Promise.resolve(Reflect.apply(method, instance, params));
     if (methodResult === false) return methodResult;
 
-    if (after) {
-        await Promise.resolve(Reflect.apply(after, instance, []));
+    if (__after) {
+        await Promise.resolve(Reflect.apply(__after, instance, []));
     }
 
     return methodResult;

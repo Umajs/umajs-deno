@@ -1,18 +1,29 @@
 import { Before, After, Private, Path, RequestMethod, Controller, Resource } from '../../src/index';
 import Test from '../service/Test';
 
+// Path 修饰 class 时，参数为根路由(参数只能一个)
+// Path 修饰 method 时，参数为方法路由(参数可有多个)
 @Path('/index')
+// 被 before 修饰的方法
+// 当 before 修饰方法时，参数为此 class 的前置函数，所有 action 触发都会先调用此方法
+// 当 before 修饰类时， 参数为当前 action 的前置函数，调用此 action 都会条用函数参数
+// after 同理
+@Before('ClassBefore')
+@After('ClassAfter')
 export default class Index extends Controller {
 
+    // 依赖注入，将需要的服务引入直接使用
     @Resource('Test')
     private testService: Test;
 
+    // RequestMethod 请求 method 方法 默认全部
     @RequestMethod('GET')
     index() {
         console.log(this.testService.return1());
         this.ctx.body = '这里是首页';
     }
 
+    // 先调用 中间件方法，再调用controller 前置，后调用 method 前置，最后调用 method
     @Before('Before')
     @After('After')
     @Path('/test/:name')
@@ -22,24 +33,15 @@ export default class Index extends Controller {
         this.ctx.body = `这里是测试页面，地址 ${this.req.path}`;
     }
 
+    // 需要登录，在 login 中做登录校验
     @Before('Login')
     data() {
         console.log('需要登录，你看不到这里');
     }
 
+    // 私有化方法，默认路由('/index/hehe')不会进入此 action
     @Private
     hehe() {
         this.ctx.body = 'hehe';
-    }
-
-    /* eslint-disable class-methods-use-this */
-    @Before()
-    before() {
-        console.log('-- controller 前置方法');
-    }
-
-    @After()
-    after() {
-        console.log('-- controller 后置方法');
     }
 }

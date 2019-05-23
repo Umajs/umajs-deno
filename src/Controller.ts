@@ -16,4 +16,8 @@ export default class Controller {
     res: any;
 
     next: Function;
+
+    __before: Function;
+
+    __after: Function;
 }

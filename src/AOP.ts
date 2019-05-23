@@ -1,10 +1,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { SetController } from './ControllerHelper';
 import { requireDefault } from './utils';
 
-export const aops: any = {};
+export const AopMap: Map<string, Function> = new Map();
 
 export function LoadAop(dirPath: string) {
     const files = fs.readdirSync(dirPath);
@@ -14,33 +13,41 @@ export function LoadAop(dirPath: string) {
             return LoadAop(filePath);
         }
 
-        const clazzName = file.split('.')[0];
-        const interceptor = requireDefault(filePath);
+        const aopName = file.split('.')[0];
+        const aopFn: Function = requireDefault(filePath);
 
-        Reflect.set(aops, clazzName, interceptor);
+        AopMap.set(aopName, aopFn);
     }
 }
 
 /* 写入到 ControllerMap 中 */
-function reDefineProperty(clazz: Function, methodName: string, newMethodName: string) {
-    SetController(clazz.constructor, methodName, {
-        inside: true,
-        [newMethodName]: Reflect.get(clazz, methodName),
+function defineNewProperty(clazz: Function, methodName: string, method: Function) {
+    const oldMethod = Reflect.get(clazz.prototype, methodName);
+    Reflect.defineProperty(clazz.prototype, methodName, {
+        writable: true,
+        value: async function fn(...props: any[]) {
+            if (oldMethod) {
+                const result = await Promise.resolve(Reflect.apply(oldMethod, this, props));
+                if (methodName === '__before' && result === false) return;
+            }
+            return method.apply(this, props);
+        },
     });
 }
 
 export function Before(aopName?: string): Function {
-    return function _before(target: Function, methodName: string, { value, configurable, enumerable }: PropertyDescriptor) {
-        if (!aopName) {
-            return reDefineProperty(target, methodName, 'before');
+    return function _before(target: Function, methodName: string, desc: PropertyDescriptor) {
+        if (!methodName || !desc) {
+            return defineNewProperty(target, '__before', AopMap.get(aopName));
         }
 
+        const { value, configurable, enumerable } = desc;
         return {
             configurable,
             enumerable,
             writable: true,
             value: async function before(...props: any[]) {
-                const beforeResult = await Promise.resolve(Reflect.apply(aops[aopName], this, []));
+                const beforeResult = await Promise.resolve(Reflect.apply(AopMap.get(aopName), this, []));
                 if (beforeResult === false) return;
                 return value.apply(this, props);
             },
@@ -49,18 +56,19 @@ export function Before(aopName?: string): Function {
 }
 
 export function After(aopName?: string): Function {
-    return function _after(target: Function, methodName: string, { value, configurable, enumerable }: PropertyDescriptor) {
-        if (!aopName) {
-            return reDefineProperty(target, methodName, 'after');
+    return function _after(target: Function, methodName: string, desc: PropertyDescriptor) {
+        if (!methodName || !desc) {
+            return defineNewProperty(target, '__after', AopMap.get(aopName));
         }
 
+        const { value, configurable, enumerable } = desc;
         return {
             configurable,
             enumerable,
             writable: true,
             value: async function after(...props: any[]) {
                 await Promise.resolve(Reflect.apply(value, this, props));
-                return aops[aopName].apply(this);
+                return AopMap.get(aopName).apply(this);
             },
         };
     };

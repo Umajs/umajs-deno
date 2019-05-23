@@ -21,11 +21,11 @@ const Router = (cfg = {}) => {
         routers = [],
     } = getConfig();
 
+    aopPath && LoadAop(aopPath);
+
     loadResources(resourcePath);
 
     LoadControllers(controllerPath);
-
-    aopPath && LoadAop(aopPath);
 
     for (const [clazz, clazzInfo] of ControllerMap) {
         ClazzMap.set(clazzInfo.clazzName, { clazz, ...clazzInfo });

@@ -1,7 +1,7 @@
 import * as Koa from 'koa';
 import * as path from 'path';
 
-process.env.ROUTE_ENV_TYPE = 'dev';
+// process.env.ROUTE_ENV_TYPE = 'dev';
 const { Router } = require('../src/index');
 import routers from './routers';
 
