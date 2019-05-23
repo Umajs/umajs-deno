@@ -1,6 +1,6 @@
 {
   "name": "koa-router-class",
-  "version": "0.3.6",
+  "version": "0.3.8",
   "main": "dist/index.js",
   "scripts": {
     "test": "mocha test",
@@ -10,6 +10,10 @@
     "prebuild": "esw src --clear --ext .ts",
     "build": "tsc",
     "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EdwardZZZ/koa-router-class"
   },
   "keywords": [],
   "author": "",

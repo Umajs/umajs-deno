@@ -4,10 +4,10 @@ import Test from '../service/Test';
 // Path 修饰 class 时，参数为根路由(参数只能一个)
 // Path 修饰 method 时，参数为方法路由(参数可有多个)
 @Path('/index')
-// 被 before 修饰的方法
-// 当 before 修饰方法时，参数为此 class 的前置函数，所有 action 触发都会先调用此方法
-// 当 before 修饰类时， 参数为当前 action 的前置函数，调用此 action 都会条用函数参数
-// after 同理
+// 被 Before 修饰的方法
+// 当 Before 修饰 class 时，参数为此 class 的前置函数，class 下所有 action 触发都会先调用此方法
+// 当 Before 修饰 action 时， 参数为当前 action 的前置函数，调用此 action 都会条用函数参数
+// After 同理
 @Before('ClassBefore')
 @After('ClassAfter')
 export default class Index extends Controller {
