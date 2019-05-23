@@ -16,6 +16,7 @@ declare namespace WF {
      */
     export type routerOptions = {
         controllerPath?: string,    // default /src/controller
+        resourcePath?: string,  // default /src
         aopPath?: string,   // default /src/interceptor
         controllerSuffix?: string,  // default Controller
         routers?: router[],
@@ -76,6 +77,15 @@ declare namespace WF {
     //     export const TRACE: Function;
     //     export const CONNECT: Function;
     // }
+
+    /**
+     * 声明或者引用资源
+     * Usage
+     * 声明： @Resource
+     * 引用： @Resource('Test')
+     * @param props 
+     */
+    export function Resource(...props: any[]) : any;
 
     /**
      * Controller 基类，提供一些基本方法
