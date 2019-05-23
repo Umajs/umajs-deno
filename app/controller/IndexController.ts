@@ -1,10 +1,15 @@
-import { Before, After, Private, Path, RequestMethod, Controller } from '../../src/index';
+import { Before, After, Private, Path, RequestMethod, Controller, Resource } from '../../src/index';
+import Test from '../service/Test';
 
 @Path('/index')
 export default class Index extends Controller {
 
+    @Resource('Test')
+    private testService: Test;
+
     @RequestMethod('GET')
     index() {
+        console.log(this.testService.return1());
         this.ctx.body = '这里是首页';
     }
 

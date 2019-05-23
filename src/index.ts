@@ -9,15 +9,19 @@ import { LoadAop, Before, After } from './AOP';
 import RequestMethod from './RequestMethod';
 import log from './log';
 import { IControllerInfo, IMethodInfo, IPathInfo } from './type';
+import { loadResources, Resource } from './Resource';
 
 const Router = (cfg = {}) => {
     setConfig(cfg);
 
     const {
         controllerPath,
+        resourcePath,
         aopPath,
         routers = [],
     } = getConfig();
+
+    loadResources(resourcePath);
 
     LoadControllers(controllerPath);
 
@@ -76,6 +80,7 @@ export {
     Before,
     After,
     Private,
+    Resource,
     RequestMethod,
     Controller,
     controllers,

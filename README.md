@@ -20,12 +20,17 @@ import { Before, After, Inside, Path, RequestMethod, Controller } from 'koa-rout
 
 // Path 修饰 class 时，参数为根路由(参数只能一个)
 // Path 修饰 method 时，参数为方法路由(参数可有多个)
-@Path('index')  // 根路由，可以不配置
+@Path('/index')  // 根路由，可以不配置
 export default class Index extends Controller {
+
+    // 依赖注入，将需要的服务引入直接使用
+    @Resource('Test')
+    private testService: Test;
 
     // RequestMethod 默认全部
     @RequestMethod('GET')
     index() {
+        console.log(this.testService.return1());
         this.ctx.body = '这里是首页';
     }
 

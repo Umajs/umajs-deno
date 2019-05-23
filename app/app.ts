@@ -20,6 +20,7 @@ app.use(async (ctx, next) => {
 
 app.use(Router({
     controllerPath: path.resolve(process.cwd(), 'app/controller'),
+    resourcePath: path.resolve(process.cwd(), 'app'),
     aopPath: path.resolve(process.cwd(), 'app/aop'),
     routers,
 }));

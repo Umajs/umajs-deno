@@ -3,6 +3,7 @@ import * as path from 'path';
 
 import { ControllerMatch, requireDefault } from './utils';
 import { IControllerInfo, IHelper, IMethodInfo } from './type';
+import log from './log';
 
 // ControllerMap
 export const ControllerMap: Map<Function, IControllerInfo> = new Map();
@@ -31,20 +32,19 @@ export function LoadControllers(dirPath: string) {
 
     const files = fs.readdirSync(dirPath);
     for (const file of files) {
-        console.log(file);
+        log('controller', file);
         const filePath = path.resolve(dirPath, file);
         if (fs.statSync(filePath).isDirectory()) {
-            return LoadControllers(filePath);
+            LoadControllers(filePath);
+        } else {
+            const controllerResult = ControllerMatch(filePath);
+            if (!controllerResult) return;
+
+            const clazzName = controllerResult[1].toLowerCase();
+
+            const clazz = requireDefault(filePath);
+            SetController(clazz, null, { clazzName });
         }
-
-        const controllerResult = ControllerMatch(filePath);
-        if (!controllerResult) return;
-
-        const clazzName = controllerResult[1].toLowerCase();
-
-        // No same name
-        const clazz = requireDefault(filePath);
-        SetController(clazz, null, { clazzName });
     }
 }
 
