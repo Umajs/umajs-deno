@@ -1,6 +1,8 @@
 import { SetController } from './ControllerHelper';
 import { IPathInfo } from './type';
 
+// path
+export const PathMap: Map<IPathInfo, string> = new Map();
 // static
 export const StaticMap: Map<string, IPathInfo> = new Map();
 // path decorator
@@ -34,7 +36,7 @@ export function Path(...pathArr: string[]) {
                 methodName,
             };
 
-            StaticMap.set(methodPath, pathInfo);
+            PathMap.set(pathInfo, methodPath);
         });
 
         SetController(clazz, methodName, {});

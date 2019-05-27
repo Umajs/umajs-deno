@@ -4,7 +4,7 @@ import Controller from './Controller';
 import router, { ClazzMap } from './Router';
 import { LoadControllers, ControllerMap, Private, SetController, controllers } from './ControllerHelper';
 import { getConfig, setConfig } from './Config';
-import { Path, StaticMap, RouteMap } from './Path';
+import { Path, StaticMap, RouteMap, PathMap } from './Path';
 import { LoadAop, Before, After } from './AOP';
 import RequestMethod from './RequestMethod';
 import log from './log';
@@ -26,6 +26,7 @@ const Router = (cfg = {}) => {
     loadResources(resourcePath);
 
     LoadControllers(controllerPath);
+    log('ControllerMap', ControllerMap);
 
     for (const [clazz, clazzInfo] of ControllerMap) {
         ClazzMap.set(clazzInfo.clazzName, { clazz, ...clazzInfo });
@@ -41,14 +42,11 @@ const Router = (cfg = {}) => {
 
         SetController(clazz, methodName, { inside: true, methodType });
         for (const route of routes) {
-            StaticMap.set(route, { clazz, methodName, methodType });
+            PathMap.set({ clazz, methodName, methodType }, route);
         }
     });
 
-    const mps = [...StaticMap.keys()];
-    for (const mp of mps) {
-        const { clazz, methodName } = StaticMap.get(mp);
-
+    for (const [{ clazz, methodName }, mp] of PathMap) {
         const clazzInfo: IControllerInfo = ControllerMap.get(clazz) || {};
         const methodMap: Map<string, IMethodInfo> = clazzInfo.methodMap || new Map();
         const { inside = false } = methodMap.get(methodName) || {};
@@ -67,9 +65,10 @@ const Router = (cfg = {}) => {
         StaticMap.delete(mp);
     }
 
-    log('ControllerMap', ControllerMap);
+    log('PathMap', PathMap);
     log('StaticMap', StaticMap);
     log('RouteMap', RouteMap);
+    PathMap.clear();
 
     return router;
 };
