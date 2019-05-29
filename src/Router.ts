@@ -25,7 +25,7 @@ async function callMethod(clazz: Function, methodName: string, params: string[],
     if (methodResult === false) return methodResult;
 
     if (__after) {
-        await Promise.resolve(Reflect.apply(__after, instance, []));
+        await Promise.resolve(Reflect.apply(__after, instance, [methodResult]));
     }
 
     return methodResult;

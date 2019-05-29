@@ -4,6 +4,7 @@ import * as path from 'path';
 import { ControllerMatch, requireDefault } from './utils';
 import { IControllerInfo, IHelper, IMethodInfo } from './type';
 import log from './log';
+import Controller from './Controller';
 
 // ControllerMap
 export const ControllerMap: Map<Function, IControllerInfo> = new Map();
@@ -43,7 +44,9 @@ export function LoadControllers(dirPath: string) {
             const clazzName = controllerResult[1].toLowerCase();
 
             const clazz = requireDefault(filePath);
-            SetController(clazz, null, { clazzName });
+            if (clazz && clazz.prototype && clazz.prototype instanceof Controller) {
+                SetController(clazz, null, { clazzName });
+            }
         }
     }
 }
