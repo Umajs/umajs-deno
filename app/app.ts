@@ -18,6 +18,7 @@ app.use(async (ctx, next) => {
 
 app.use(Router({
     ROOT: __dirname,
+    app,
 }));
 
 // response
@@ -25,4 +26,6 @@ app.use(ctx => {
     ctx.body = 'Hello Koa';
 });
 
-app.listen(3000);
+app.listen(3000, () => {
+    console.log('启动成功，端口：3000');
+});

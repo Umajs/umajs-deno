@@ -3,17 +3,22 @@ export default class Require {
      * clear module cache
      * @param {string} modulePath
      */
-    // static deleteCache(modulePath: string) {
-    //     const module: NodeModule = require.cache[modulePath];
+    static deleteCache(modulePath: string) {
+        /* eslint-disable no-undef */
+        const module: NodeModule = require.cache[modulePath];
 
-    //     if (!module) return;
+        if (!module) return;
 
-    //     if (module.parent) {
-    //         module.parent.children.splice(module.parent.children.indexOf(module), 1);
-    //     }
+        if (module.parent) {
+            module.parent.children.splice(module.parent.children.indexOf(module), 1);
+        }
 
-    //     delete require.cache[modulePath];
-    // }
+        if (module.children) {
+            module.children.splice(module.children.indexOf(module), 1);
+        }
+
+        delete require.cache[modulePath];
+    }
 
     /**
      * require default or common default

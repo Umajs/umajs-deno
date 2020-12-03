@@ -5,10 +5,15 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Run app",
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
-            "program": "${workspaceFolder}/test/app.js"
+            "program": "${workspaceRoot}/node_modules/ts-node/dist/bin.js",
+            "args": [
+                "app/app.ts"
+            ],
+            "cwd": "${workspaceRoot}",
+            "protocol": "inspector"
         }
     ]
 }

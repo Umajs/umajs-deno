@@ -1,4 +1,4 @@
-import controllerInfo from '../utils/controllerInfo';
+import controllerInfo from '../utils/ControllerInfo';
 import TypeHelper from '../utils/TypeHelper';
 
 /* eslint no-shadow: 0 */

@@ -39,7 +39,7 @@ export default class {
             if (path) {
                 const pathObj: TPath = { path };
 
-                if (methodTypes.length > 1) pathObj.methodTypes = methodTypes;
+                if (methodTypes.length > 0) pathObj.methodTypes = methodTypes;
 
                 methodInfo.paths.push(pathObj);
             }
@@ -61,5 +61,9 @@ export default class {
 
     static getControllersInfo(): IterableIterator<TControllerInfo> {
         return ControllerMap.values();
+    }
+
+    static get(clazz: Function) {
+        return ControllerMap.get(clazz);
     }
 }
