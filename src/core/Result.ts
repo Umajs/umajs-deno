@@ -3,7 +3,7 @@ import * as send from 'koa-send';
 
 import { CALLBACK_FIELD, VIEW_PATH, DOWNLOAD_PATH } from '../utils/consts';
 import { Results } from '../extends/Results';
-import { IResult, TResultType } from '../typings/IResult';
+import { IResult } from '../typings/IResult';
 import { IContext } from '../typings/IContext';
 
 export default class Result<T = any> implements IResult {
@@ -13,7 +13,7 @@ export default class Result<T = any> implements IResult {
         this.status = status;
     }
 
-    type: TResultType;
+    type: string;
 
     data: T;
 

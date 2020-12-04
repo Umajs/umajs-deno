@@ -1,5 +1,6 @@
 import typeHelper from '../utils/typeHelper';
 import { BaseContext, IContext } from '../typings/IContext';
+import LazyModules from '../loader/LazyModules';
 
 export const Context: BaseContext = {
     send(val: string | Buffer, status?: number) {
@@ -10,6 +11,12 @@ export const Context: BaseContext = {
     json(data: Object) {
         this.type = 'application/json';
         this.body = data;
+    },
+
+    jsonp(data: Object, callbackField: string = 'callback') {
+        this.set('X-Content-Type-Options', 'nosniff');
+        this.type = 'application/javascript';
+        this.body = LazyModules.jsonpBody(data, callbackField);
     },
 
     view(viewPath: string, locals: any = {}) {

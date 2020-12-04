@@ -18,6 +18,13 @@ export interface BaseContext {
     json(data: Object): void;
 
     /**
+     * 发送 jsonp
+     * @param data json内容
+     * @param callbackField 回调字段
+     */
+    jsonp(data: Object, callbackField?: string): void;
+
+    /**
      * 发送模板
      * @param viewPath 模板地址
      * @param locals 变量
