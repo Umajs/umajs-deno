@@ -2,7 +2,7 @@ import controllerInfo from '../utils/ControllerInfo';
 import TypeHelper from '../utils/TypeHelper';
 
 /* eslint no-shadow: 0 */
-enum RequestMethod {
+export enum RequestMethod {
     GET = 'GET',
     POST = 'POST',
     PUT = 'PUT',

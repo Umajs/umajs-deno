@@ -1,5 +1,5 @@
-import { throwError } from "../utils";
-import TypeHelper from "../utils/TypeHelper";
+import { throwError } from '../utils';
+import TypeHelper from '../utils/TypeHelper';
 
 export const ResourceClazzMap: Map<Function, any[]> = new Map();
 
@@ -9,7 +9,7 @@ export const ResourceClazzMap: Map<Function, any[]> = new Map();
  */
 export function Resource(...props: any[]): Function {
     return function resource(target: Function): any {
-        throwError(!TypeHelper.isFunction(target), '@Around only use on class.')
+        throwError(!TypeHelper.isFunction(target), '@Around only use on class.');
 
         ResourceClazzMap.set(target, Reflect.construct(target, props));
     };
@@ -29,7 +29,7 @@ export function Inject(resource: Function): Function {
             get() {
                 const resourceClass = ResourceClazzMap.get(resource);
 
-                throwError(!resourceClass, `Please check @Inject target is exists.`);
+                throwError(!resourceClass, 'Please check @Inject target is exists.');
 
                 return resourceClass;
             },

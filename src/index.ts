@@ -13,7 +13,7 @@ import { Response } from './extends/Response';
 import { Request } from './extends/Request';
 
 export { default as BaseController } from './core/BaseController';
-export { Path } from './decorators/Path';
+export { Path, RequestMethod } from './decorators/Path';
 export { Resource, Inject } from './decorators/Resource';
 export { Around, middlewareToAround } from './decorators/Around';
 export { createArgDecorator, Query, Param, Context } from './decorators/ArgDecorator';
@@ -32,6 +32,7 @@ export function Router({ ROOT, app }: {
 
     const StaticRouterMap: Map<String, TPathInfo> = new Map();
     const RegexpRouterMap: Map<RegExp, TPathInfo> = new Map();
+    const RoutePathSet: Set<string> = new Set();
 
     for (const info of controllerInfo.getControllersInfo()) {
         const { clazz, root = '', methodMap } = info;
@@ -43,6 +44,10 @@ export function Router({ ROOT, app }: {
 
             paths.forEach(({ path: p, methodTypes }) => {
                 const routePath = replaceTailSlash(root + p) || '/';
+
+                if (RoutePathSet.has(routePath)) return console.log(`[URL NOT UNIQUE] ${routePath}`);
+                console.log(`[URL]${routePath}`);
+                RoutePathSet.add(routePath);
 
                 if (p.indexOf(':') > -1 || p.indexOf('(') > -1) {
                     const keys: Key[] = [];

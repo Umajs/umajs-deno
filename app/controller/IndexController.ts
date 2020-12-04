@@ -1,10 +1,9 @@
 import Result from '../../src/core/Result';
-import { Path, BaseController, Param, Around, middlewareToAround, Inject } from '../../src/index';
+import { Path, RequestMethod, BaseController, Param, Around, middlewareToAround, Inject } from '../../src/index';
 import Test from '../service/Test';
 
 // Path 修饰 class 时，参数为根路由(参数只能一个)
 // Path 修饰 method 时，参数为方法路由(参数可有多个)
-@Path('/index')
 @Around(async (point) => {
     console.log('----around before----')
 
@@ -20,11 +19,16 @@ export default class Index extends BaseController {
     @Inject(Test)
     t: Test;
 
-    @Path()
+    @Path('/')
     index() {
         console.log(this.t.test());
 
         return this.send('This is index');
+    }
+
+    @Path({ value: '/post', method: RequestMethod.POST })
+    post() {
+        return this.send('This is post page.');
     }
 
     @Path('/test/:name')
