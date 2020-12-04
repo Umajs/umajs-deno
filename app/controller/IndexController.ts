@@ -1,22 +1,33 @@
 import Result from '../../src/core/Result';
-import { Path, BaseController, Param, Around, middlewareToAround } from '../../src/index';
+import { Path, BaseController, Param, Around, middlewareToAround, Inject } from '../../src/index';
+import Test from '../service/Test';
 
 // Path 修饰 class 时，参数为根路由(参数只能一个)
 // Path 修饰 method 时，参数为方法路由(参数可有多个)
 @Path('/index')
+@Around(async (point) => {
+    console.log('----around before----')
+
+    const { proceed, args } = point;
+    const result = await proceed(args);
+
+    console.log('----around after----')
+
+    return result;
+})
 export default class Index extends BaseController {
 
-    // RequestMethod 请求 method 方法 默认全部
+    @Inject(Test)
+    t: Test;
+
     @Path()
     index() {
+        console.log(this.t.test());
+
         return this.send('This is index');
     }
 
     @Path('/test/:name')
-    @Around((point) => {
-        const { proceed, args } = point;
-        return proceed(args);
-    })
     @Around(middlewareToAround((ctx, next) => {
         console.log('》》', ctx.request.path);
         return next();

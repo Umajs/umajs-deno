@@ -27,14 +27,14 @@ export function middlewareToAround(middleware: (Koa.Middleware<any, IContext>)) 
 }
 
 export function Around(around: (point: IProceedJoinPoint) => Promise<Result>): Function {
-    if (!TypeHelper.isFunction(around)) throw new Error('Around param must be Function.');
+    if (!TypeHelper.isFunction(around)) throw new Error('@Around param must be Function.');
 
     return function aroundDecorator(target: Function, methodName: string, desc: PropertyDescriptor): PropertyDescriptor {
         if (!methodName) {
             Reflect.ownKeys(target.prototype).forEach((method: string) => {
                 if (method === 'constructor') return;
 
-                const aroundMethod = aroundDecorator(target, method, Reflect.getOwnPropertyDescriptor(target.prototype, method));
+                const aroundMethod = aroundDecorator(target.prototype, method, Reflect.getOwnPropertyDescriptor(target.prototype, method));
 
                 Reflect.defineProperty(target.prototype, method, aroundMethod);
             });
@@ -42,7 +42,7 @@ export function Around(around: (point: IProceedJoinPoint) => Promise<Result>): F
             return;
         }
 
-        throwError(!(target instanceof BaseController), 'Decorator "Around" only use on class extends BaseController.');
+        throwError(!(target instanceof BaseController), '@Around only use on class extends BaseController.');
 
         const { value: method, configurable, enumerable } = desc;
 
