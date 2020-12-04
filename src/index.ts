@@ -14,6 +14,7 @@ import { Request } from './extends/Request';
 
 export { default as BaseController } from './core/BaseController';
 export { Path } from './decorators/Path';
+export { Around, middlewareToAround } from './decorators/Around';
 export { createArgDecorator, Query, Param, Context } from './decorators/ArgDecorator';
 
 export function Router({ ROOT, app }: {

@@ -1,13 +1,31 @@
+import * as Koa from 'koa';
+
+import Result from '../core/Result';
+import { IContext } from '../typings/IContext';
 import TypeHelper from '../utils/TypeHelper';
 
 export interface IProceedJoinPoint<T = any> {
     target: T;
     args: Array<any>;
-    proceed(...props: any[]): Promise<any>;
+    proceed(...props: any[]): Promise<Result>;
 }
 
-export function Around(around: Function) {
-    if (!TypeHelper.isFunction) throw new Error('Around param must be string.');
+/**
+ * 将中间件转成切面 around 方法
+ * @param middleware 中间件
+ * eg:
+    const around = middlewareToAround((ctx, next) => {
+        console.log('》》', ctx.request.path);
+        return next();
+    });
+    @Around(around)
+ */
+export function middlewareToAround(middleware: (Koa.Middleware<any, IContext>)) {
+    return ({ target, proceed, args }: IProceedJoinPoint): Promise<Result> => middleware(target.ctx, () => proceed(...args));
+}
+
+export function Around(around: (point: IProceedJoinPoint) => Promise<Result>): Function {
+    if (!TypeHelper.isFunction(around)) throw new Error('Around param must be Function.');
 
     return function aroundDecorator(target: Function, methodName: string, desc: PropertyDescriptor): PropertyDescriptor {
         if (!methodName) {
@@ -29,7 +47,9 @@ export function Around(around: Function) {
             enumerable,
             writable: true,
             value: function aspect(...args: any[]) {
-                return around.call(target, { target, args, proceed: method });
+                const proceed = (...proceedArgs: any[]) => Reflect.apply(method, this, proceedArgs.length ? proceedArgs : args);
+
+                return Reflect.apply(around, this, [{ target: this, args, proceed }]);
             },
         };
     };
