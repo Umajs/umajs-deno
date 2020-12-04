@@ -1,7 +1,9 @@
 import * as Koa from 'koa';
+import BaseController from '../core/BaseController';
 
 import Result from '../core/Result';
 import { IContext } from '../typings/IContext';
+import { throwError } from '../utils';
 import TypeHelper from '../utils/TypeHelper';
 
 export interface IProceedJoinPoint<T = any> {
@@ -39,6 +41,8 @@ export function Around(around: (point: IProceedJoinPoint) => Promise<Result>): F
 
             return;
         }
+
+        throwError(!(target instanceof BaseController), 'Decorator "Around" only use on class extends BaseController.');
 
         const { value: method, configurable, enumerable } = desc;
 
