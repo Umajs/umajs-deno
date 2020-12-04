@@ -1,3 +1,3 @@
 import { BaseResponse } from '../typings/IResponse';
 
-export const Response: BaseResponse = {};
+export const response: BaseResponse = {};

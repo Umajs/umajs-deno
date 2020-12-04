@@ -1,34 +1,33 @@
 import * as Koa from 'koa';
 import { pathToRegexp, Key } from 'path-to-regexp';
 
-import { loadDir, mixin, replaceTailSlash } from './utils';
+import { loadDir, replaceTailSlash } from './utils';
 import controllerInfo from './utils/ControllerInfo';
 import Require from './utils/Require';
 import { callMethod } from './utils/callMethod';
 
 import { TPathInfo } from './typings/TPathInfo';
 import { IContext } from './typings/IContext';
-import { Context } from './extends/Context';
-import { Response } from './extends/Response';
-import { Request } from './extends/Request';
+import { context } from './extends/Context';
+import { response } from './extends/Response';
+import { request } from './extends/Request';
+import expansion from './extends';
 
 export { default as BaseController } from './core/BaseController';
 export { Path, RequestMethod } from './decorators/Path';
 export { Resource, Inject } from './decorators/Resource';
 export { Around, middlewareToAround } from './decorators/Around';
 export { createArgDecorator, Query, Param, Context } from './decorators/ArgDecorator';
+export { expansion };
 
 export function Router({ ROOT, app }: {
     ROOT: string,
     app: Koa,
 }) {
+    expansion(app, { context, request, response });
     loadDir(ROOT, (fileName) => {
         Require.default(fileName);
     });
-
-    mixin(false, app.context, Context);
-    mixin(false, app.response, Response);
-    mixin(false, app.request, Request);
 
     const StaticRouterMap: Map<String, TPathInfo> = new Map();
     const RegexpRouterMap: Map<RegExp, TPathInfo> = new Map();

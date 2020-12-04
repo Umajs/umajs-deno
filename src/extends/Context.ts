@@ -2,7 +2,7 @@ import typeHelper from '../utils/typeHelper';
 import { BaseContext, IContext } from '../typings/IContext';
 import LazyModules from '../loader/LazyModules';
 
-export const Context: BaseContext = {
+export const context: BaseContext = {
     send(val: string | Buffer, status?: number) {
         if (status) this.status = status;
         this.body = val;
