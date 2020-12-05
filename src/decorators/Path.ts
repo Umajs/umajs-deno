@@ -31,7 +31,7 @@ export type TPathObjArgs = {
  * Path({ value: ['/p1', '/p2'], method: RequestType.GET })
  * Path({ value: ['/p1', '/p2'], method: [RequestType.GET, RequestType.POST] })
  */
-export function Path(...args: [...string[]]): Function;
+export function Path(...args: string[]): Function;
 
 export function Path(arg: { value?: string | string[]; method?: RequestMethod | RequestMethod[]; }): Function;
 
