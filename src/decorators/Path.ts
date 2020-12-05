@@ -31,6 +31,10 @@ export type TPathObjArgs = {
  * Path({ value: ['/p1', '/p2'], method: RequestType.GET })
  * Path({ value: ['/p1', '/p2'], method: [RequestType.GET, RequestType.POST] })
  */
+export function Path(...args: [...string[]]): Function;
+
+export function Path(arg: { value?: string | string[]; method?: RequestMethod | RequestMethod[]; }): Function;
+
 export function Path(...args: [...string[]] | [TPathObjArgs]): Function {
     return function Method(...props: Parameters<MethodDecorator> | Parameters<ClassDecorator>) {
         const [arg0] = args;

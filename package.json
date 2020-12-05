@@ -5,7 +5,8 @@
   "scripts": {
     "lint": "eslint src --ext .ts",
     "lint-w": "esw src --clear --color -w --ext .ts",
-    "start": "parallelshell 'npm run lint-w' 'tsc -w --inlineSourceMap'",
+    "build-w": "tsc -w --inlineSourceMap",
+    "start": "parallelshell 'npm run lint-w' 'npm run build-w'",
     "app": "ts-node-dev app/app.ts",
     "prebuild": "esw src --clear --ext .ts",
     "build": "tsc",
