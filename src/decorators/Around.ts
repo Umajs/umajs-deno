@@ -23,7 +23,17 @@ export interface IProceedJoinPoint<T = any> {
     @Around(around)
  */
 export function middlewareToAround(middleware: (Koa.Middleware<any, IContext>)) {
-    return ({ target, proceed, args }: IProceedJoinPoint): Promise<Result> => middleware(target.ctx, () => proceed(...args));
+    return ({ target, proceed, args }: IProceedJoinPoint): Promise<Result> => new Promise((resolve, reject) => {
+        middleware(target.ctx, async () => {
+            try {
+                const result = await proceed(...args);
+
+                resolve(result);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    });
 }
 
 export function Around(around: (point: IProceedJoinPoint) => Promise<Result>): Function {
@@ -50,10 +60,10 @@ export function Around(around: (point: IProceedJoinPoint) => Promise<Result>): F
             configurable,
             enumerable,
             writable: true,
-            value: function aspect(...args: any[]) {
+            value: async function aspect(...args: any[]) {
                 const proceed = (...proceedArgs: any[]) => Reflect.apply(method, this, proceedArgs.length ? proceedArgs : args);
 
-                return Reflect.apply(around, this, [{ target: this, args, proceed }]);
+                return await Promise.resolve(Reflect.apply(around, this, [{ target: this, args, proceed }]));
             },
         };
     };
