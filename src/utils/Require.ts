@@ -32,7 +32,7 @@ export default class Require {
 
             return (ex && (typeof ex === 'object') && 'default' in ex) ? ex.default : ex;
         } catch (error) {
-            console.log(`建议${p}父级目录配置ignore`);
+            console.log(`require默认不支持${p}文件的引入`, error);
         }
     }
 }

@@ -7,7 +7,7 @@ import { Router } from '../src/index.ts';
 const app = new Koa();
 const port = 3000;
 
-app.use(viewsMiddleware(path.join(__dirname(import.meta), './views')));
+app.use(viewsMiddleware({ viewRoot: path.join(__dirname(import.meta), './views') }));
 
 app.use(async (ctx, next) => {
     if (ctx.request.url.pathname === '/favicon.ico') return;

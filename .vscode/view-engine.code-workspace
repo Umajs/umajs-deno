@@ -1,0 +1,16 @@
+{
+  "folders": [
+    {
+      "path": ".."
+    }
+  ],
+  "settings": {
+    "[typescript]": {
+      "editor.defaultFormatter": "denoland.vscode-deno",
+    },
+    "[typescriptreact]": {
+      "editor.defaultFormatter": "axetroy.vscode-deno"
+    },
+    "workbench.colorTheme": "Dracula",
+  }
+}

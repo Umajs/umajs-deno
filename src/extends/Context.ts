@@ -22,7 +22,7 @@ export const context: BaseContext = {
     view(viewPath: string, locals: any = {}) {
         const ctx: IContext = <IContext>this;
 
-        return ctx.render(viewPath);
+        return ctx.render(viewPath, locals);
     },
 
     get userAgent() {

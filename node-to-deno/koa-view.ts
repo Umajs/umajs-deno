@@ -1,18 +1,8 @@
-import { send } from "./koa.ts";
+import {viewEngine,engineFactory,adapterFactory} from "https://deno.land/x/view_engine/mod.ts";
 
-export function viewsMiddleware(root: string, option?: object) {
-  return function views(ctx:any, next:any) {
+const ejsEngine = engineFactory.getEjsEngine();
+const oakAdapter = adapterFactory.getOakAdapter();
 
-    if (ctx.render) return next();
-
-    ctx.response.render = ctx.render = function(relPath: string) {
-
-      return send(ctx, ctx.request.url.pathname, {
-        root,
-        index: relPath
-      });
-    }
-
-    return next();
-  }
+export function viewsMiddleware(option: object = {}) {
+  return viewEngine(oakAdapter,ejsEngine, option);
 }

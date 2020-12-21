@@ -70,5 +70,5 @@ export interface BaseContext extends ContextDelegatedRequest, ContextDelegatedRe
 export interface IContext extends Context, BaseContext {
     request: IRequest;
     response: IResponse;
-    render(relPath: string): any;
+    render(relPath: string, data: any): any;
 }
