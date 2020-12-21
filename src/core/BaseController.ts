@@ -1,7 +1,7 @@
-import Result from './Result';
-import { IContext, BaseContext } from '../typings/IContext';
-import { IRequest } from '../typings/IRequest';
-import { IResponse } from '../typings/IResponse';
+import Result from './Result.ts';
+import { IContext, BaseContext } from '../typings/IContext.ts';
+import { IRequest } from '../typings/IRequest.ts';
+import { IResponse } from '../typings/IResponse.ts';
 
 /**
  * controller 自带方法在 ctx 中也有相同实现
@@ -12,17 +12,23 @@ export default class BaseController implements BaseContext {
 
         this.req = req;
         this.res = res;
+        this.request = req;
+        this.response = res;
     }
 
     req: IRequest;
 
     res: IResponse;
 
+    request: IRequest;
+
+    response: IResponse;
+
     set status(status: number) {
         this.ctx.status = status;
     }
 
-    send = Result.send;
+    sendData = Result.send;
 
     json = Result.json;
 
@@ -37,11 +43,15 @@ export default class BaseController implements BaseContext {
     redirect = Result.redirect
 
     get userAgent() {
-        return this.ctx.header['user-agent'];
+        return this.ctx.headers['user-agent'];
     }
 
     get param() {
         return this.ctx.param;
+    }
+
+    get query() {
+        return this.ctx.query;
     }
 
     setHeader(name: string | any, value: string | string[]): void {

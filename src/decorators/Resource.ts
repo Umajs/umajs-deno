@@ -1,5 +1,5 @@
-import { throwError } from '../utils';
-import TypeHelper from '../utils/TypeHelper';
+import { throwError } from '../utils/index.ts';
+import TypeHelper from '../utils/TypeHelper.ts';
 
 export const ResourceClazzMap: Map<Function, any[]> = new Map();
 

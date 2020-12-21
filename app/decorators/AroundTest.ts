@@ -1,12 +1,12 @@
-import * as Koa from 'koa';
+import { Koa, Middleware } from '../../node-to-deno/koa.ts';
 
-import { Around, IProceedJoinPoint, middlewareToAround } from "../../src/decorators/Around";
-import { IContext } from "../../src/typings/IContext";
+import { Around, IProceedJoinPoint, middlewareToAround } from "../../src/decorators/Around.ts";
+import { IContext } from "../../src/typings/IContext.ts";
 /**
  * 封装中间件装饰器
  * @param middleware 中间件
  */
-export function Middleware(middleware: Koa.Middleware<any, IContext>) {
+export function Middleware(middleware: Middleware<any, IContext>) {
     return Around(middlewareToAround(middleware));
 }
 

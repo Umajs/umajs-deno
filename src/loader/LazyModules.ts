@@ -1,4 +1,4 @@
-import Require from '../utils/Require';
+import Require from '../utils/Require.ts';
 
 export default class LazyModules {
     static requireCatch(pName: string) {

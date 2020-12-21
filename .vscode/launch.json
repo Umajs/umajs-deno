@@ -6,14 +6,13 @@
     "configurations": [
         {
             "name": "Run app",
-            "type": "node",
+            "type": "pwa-node",
             "request": "launch",
-            "program": "${workspaceRoot}/node_modules/ts-node/dist/bin.js",
-            "args": [
-                "app/app.ts"
-            ],
-            "cwd": "${workspaceRoot}",
-            "protocol": "inspector"
+            "runtimeExecutable": "deno",
+            "runtimeArgs": ["run", "--inspect-brk", "-A", "app.ts"],
+            "cwd": "${workspaceFolder}/app",
+            "outputCapture": "std",
+            "attachSimplePort": 9229
         }
     ]
 }

@@ -1,15 +1,15 @@
-import * as Koa from 'koa';
+import { Koa, Context } from '../../node-to-deno/koa.ts';
 
-import { IRequest } from './IRequest';
-import { IResponse } from './IResponse';
+import { IRequest, ContextDelegatedRequest } from './IRequest.ts';
+import { IResponse, ContextDelegatedResponse } from './IResponse.ts';
 
-export interface BaseContext {
+export interface BaseContext extends ContextDelegatedRequest, ContextDelegatedResponse  {
     /**
      * 发送内容
      * @param data 内容
      * @param status 状态码
      */
-    send(data: string, status?: number): void;
+    sendData(data: string, status?: number): void;
 
     /**
      * 发送json
@@ -42,6 +42,11 @@ export interface BaseContext {
     param: any;
 
     /**
+     * 请求参数
+     */
+    query: any;
+
+    /**
      * 设置 header
      * @param name header 名称
      * @param value header 值
@@ -53,9 +58,17 @@ export interface BaseContext {
      * @param name header 名称
      */
     getHeader(name: string | any): any;
+
+    /**
+     * 重定向
+     * @param url 
+     * @param status 
+     */
+    redirect(url: string, status?: string | undefined): any;
 }
 
-export interface IContext extends Koa.Context, BaseContext {
+export interface IContext extends Context, BaseContext {
     request: IRequest;
     response: IResponse;
+    render(relPath: string): any;
 }

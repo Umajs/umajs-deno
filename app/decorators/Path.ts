@@ -1,4 +1,4 @@
-import { Path, RequestMethod } from '../../src/index';
+import { Path, RequestMethod } from '../../src/index.ts';
 
 export const Get = (...value: string[]) => Path({
     value,

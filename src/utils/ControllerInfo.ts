@@ -1,6 +1,6 @@
-import { throwError } from '.';
-import BaseController from '../core/BaseController';
-import { TControllerInfo, TControllerInfoHelper, TMethodInfo, TPath } from '../typings/TControllerInfo';
+import { throwError } from './index.ts';
+import BaseController from '../core/BaseController.ts';
+import { TControllerInfo, TControllerInfoHelper, TMethodInfo, TPath } from '../typings/TControllerInfo.ts';
 
 const ControllerMap: Map<Function, TControllerInfo> = new Map();
 
@@ -11,7 +11,7 @@ export default class {
      * @param methodName controller method name
      * @param info controller info
      */
-    static setControllersInfo(clazz: Function, methodName: string, info: TControllerInfoHelper = {}) {
+    static setControllersInfo(clazz: Function, methodName: string | null, info: TControllerInfoHelper = {}) {
         throwError(!(clazz.prototype instanceof BaseController), 'Decorator "Path" & "ArgDecorator" only use on class extends BaseController.');
 
         const clazzInfo: TControllerInfo = ControllerMap.get(clazz) || {};
@@ -41,11 +41,11 @@ export default class {
 
                 if (methodTypes.length > 0) pathObj.methodTypes = methodTypes;
 
-                methodInfo.paths.push(pathObj);
+                methodInfo.paths!.push(pathObj);
             }
 
             if (argDecorator) {
-                methodInfo.args.push({
+                methodInfo.args!.push({
                     argDecorator,
                     argProps,
                     argIndex,

@@ -1,31 +1,43 @@
-import * as Koa from 'koa';
+import { Koa } from '../node-to-deno/koa.ts';
+import { __dirname, viewsMiddleware, path } from '../node-to-deno/mod.ts';
 
 // process.env.ROUTE_ENV_TYPE = 'dev';
-import { Router } from '../src/index';
+import { Router } from '../src/index.ts';
 
 const app = new Koa();
+const port = 3000;
+
+app.use(viewsMiddleware(path.join(__dirname(import.meta), './views')));
 
 app.use(async (ctx, next) => {
-    if (ctx.request.path === '/favicon.ico') return;
+    if (ctx.request.url.pathname === '/favicon.ico') return;
     await next();
 });
 
 app.use(async (ctx, next) => {
     console.log('-----koa before-----');
-    await next();
+    try {
+        await next();
+    } catch(err) {
+        console.log(err);
+    }
+    
     console.log('-----koa after------');
 });
 
-app.use(Router({
-    ROOT: __dirname,
+// @ts-ignore
+app.use(await Router({
+    ROOT: __dirname(import.meta),
     app,
 }));
 
 // response
 app.use(ctx => {
-    ctx.body = 'Hello Koa';
+    ctx.response.body = "Hello Koa";
 });
 
-app.listen(3000, () => {
-    console.log('启动成功，端口：3000');
+app.addEventListener('listen', () => {
+    console.log(`启动成功，端口：${port}`);
 });
+
+await app.listen({ port })

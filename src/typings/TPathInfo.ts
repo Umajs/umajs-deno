@@ -1,4 +1,4 @@
-import { Key } from 'path-to-regexp';
+import { Key } from 'https://deno.land/x/path_to_regexp@v6.2.0/index.ts';
 
 export type TPathInfo = {
     // 文件名

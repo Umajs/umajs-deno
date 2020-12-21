@@ -1,7 +1,7 @@
-import * as send from 'koa-send';
+import { SendOptions } from '../../node-to-deno/koa.ts';
 
-import { IContext } from '../typings/IContext';
-import { DOWNLOAD_PATH, VIEW_PATH, CALLBACK_FIELD } from '../utils/consts';
+import { IContext } from '../typings/IContext.ts';
+import { DOWNLOAD_PATH, VIEW_PATH, CALLBACK_FIELD } from '../utils/consts.ts';
 
 export type TResultJsonData = {
     [key: string]: any,
@@ -23,7 +23,7 @@ export type TResultStreamData = {
     data: any,
 }
 
-export interface TResultDownData extends send.SendOptions {
+export interface TResultDownData extends SendOptions {
     [DOWNLOAD_PATH]: string
 }
 

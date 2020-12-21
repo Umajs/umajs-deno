@@ -1,7 +1,6 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import { fs, path } from '../../node-to-deno/mod.ts';
 
-import TypeHelper from './TypeHelper';
+import TypeHelper from './TypeHelper.ts';
 
 export function throwError(condition: boolean, errerMsg: string) {
     if (condition) throw new Error(errerMsg);
@@ -21,7 +20,7 @@ export function mixin(deep: boolean = false, target: any, ...sources: any[]) {
         const keys = Reflect.ownKeys(source);
 
         for (const key of keys) {
-            const descriptor = Reflect.getOwnPropertyDescriptor(source, key);
+            const descriptor: any = Reflect.getOwnPropertyDescriptor(source, key);
             const { get, set, value } = descriptor;
 
             if (get || set) {
@@ -45,20 +44,20 @@ export function mixin(deep: boolean = false, target: any, ...sources: any[]) {
  * @param dirPath 文件夹地址
  * @param checkFn 加载方法
  */
-export function loadDir(dirPath: string, loadFn: (filePath: string) => void, ignoreDirs: string[] = []) {
+export function loadDir(dirPath: string, fileArr: string[] = [], ignoreDirs: string[] = []) {
     if (!fs.existsSync(dirPath)) return;
 
     const files = fs.readdirSync(dirPath);
 
     for (const file of files) {
-        const filePath = path.resolve(dirPath, file);
+        const filePath = path.resolve(dirPath, file.name);
 
-        if (fs.statSync(filePath).isDirectory()) {
-            if (ignoreDirs.indexOf(file) === -1) {
-                loadDir(filePath, loadFn);
+        if (file.isDirectory) {
+            if (ignoreDirs.indexOf(file.name) === -1) {
+                loadDir(filePath, fileArr, ignoreDirs);
             }
         } else {
-            loadFn(filePath);
+            fileArr.push(filePath);
         }
     }
 }

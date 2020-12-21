@@ -1,16 +1,15 @@
-import * as stream from 'stream';
-import * as send from 'koa-send';
+import { SendOptions } from '../../node-to-deno/koa.ts';
 
-import { CALLBACK_FIELD, VIEW_PATH, DOWNLOAD_PATH } from '../utils/consts';
-import { Results } from '../extends/Results';
-import { IResult } from '../typings/IResult';
-import { IContext } from '../typings/IContext';
+import { CALLBACK_FIELD, VIEW_PATH, DOWNLOAD_PATH } from '../utils/consts.ts';
+import { Results } from '../extends/Results.ts';
+import { IResult } from '../typings/IResult.ts';
+import { IContext } from '../typings/IContext.ts';
 
 export default class Result<T = any> implements IResult {
     constructor({ type, data, status }: IResult) {
         this.type = type;
         this.data = data;
-        this.status = status;
+        this.status = status!;
     }
 
     type: string;
@@ -25,7 +24,7 @@ export default class Result<T = any> implements IResult {
         });
     }
 
-    static send(data: string | Buffer, status?: number) {
+    static send(data: string | Deno.Buffer , status?: number) {
         return new Result({
             type: 'send',
             data,
@@ -60,7 +59,7 @@ export default class Result<T = any> implements IResult {
         });
     }
 
-    static stream(data: stream.Readable, fileName?: string) {
+    static stream(data: ReadableStream, fileName?: string) {
         return new Result({
             type: 'stream',
             data: {
@@ -70,7 +69,7 @@ export default class Result<T = any> implements IResult {
         });
     }
 
-    static download(filePath: string, opts?: send.SendOptions) {
+    static download(filePath: string, opts?: SendOptions) {
         return new Result({
             type: 'download',
             data: {

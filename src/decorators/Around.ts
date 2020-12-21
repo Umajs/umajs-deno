@@ -1,10 +1,10 @@
-import * as Koa from 'koa';
-import BaseController from '../core/BaseController';
+import { Koa, Middleware } from '../../node-to-deno/koa.ts';
+import BaseController from '../core/BaseController.ts';
 
-import Result from '../core/Result';
-import { IContext } from '../typings/IContext';
-import { throwError } from '../utils';
-import TypeHelper from '../utils/TypeHelper';
+import Result from '../core/Result.ts';
+import { IContext } from '../typings/IContext.ts';
+import { throwError } from '../utils/index.ts';
+import TypeHelper from '../utils/TypeHelper.ts';
 
 export interface IProceedJoinPoint<T = any> {
     target: T;
@@ -22,7 +22,7 @@ export interface IProceedJoinPoint<T = any> {
     });
     @Around(around)
  */
-export function middlewareToAround(middleware: (Koa.Middleware<any, IContext>)) {
+export function middlewareToAround(middleware: (Middleware<any, IContext>)) {
     return ({ target, proceed, args }: IProceedJoinPoint): Promise<Result> => new Promise((resolve, reject) => {
         middleware(target.ctx, async () => {
             try {
@@ -39,12 +39,12 @@ export function middlewareToAround(middleware: (Koa.Middleware<any, IContext>)) 
 export function Around(around: (point: IProceedJoinPoint) => Promise<Result>): Function {
     if (!TypeHelper.isFunction(around)) throw new Error('@Around param must be Function.');
 
-    return function aroundDecorator(target: Function, methodName: string, desc: PropertyDescriptor): PropertyDescriptor {
+    return function aroundDecorator(target: Function, methodName: string, desc: PropertyDescriptor): undefined | PropertyDescriptor {
         if (!methodName) {
-            Reflect.ownKeys(target.prototype).forEach((method: string) => {
+            Reflect.ownKeys(target.prototype).forEach((method: any) => {
                 if (method === 'constructor') return;
 
-                const aroundMethod = aroundDecorator(target.prototype, method, Reflect.getOwnPropertyDescriptor(target.prototype, method));
+                const aroundMethod = <PropertyDescriptor>aroundDecorator(target.prototype, method, <PropertyDescriptor>Reflect.getOwnPropertyDescriptor(target.prototype, method));
 
                 Reflect.defineProperty(target.prototype, method, aroundMethod);
             });
@@ -52,19 +52,19 @@ export function Around(around: (point: IProceedJoinPoint) => Promise<Result>): F
             return;
         }
 
-        throwError(!(target instanceof BaseController), '@Around only use on class extends BaseController.');
+            throwError(!(target instanceof BaseController), '@Around only use on class extends BaseController.');
 
-        const { value: method, configurable, enumerable } = desc;
+            const { value: method, configurable, enumerable } = desc;
 
-        return {
-            configurable,
-            enumerable,
-            writable: true,
-            value: async function aspect(...args: any[]) {
-                const proceed = (...proceedArgs: any[]) => Reflect.apply(method, this, proceedArgs.length ? proceedArgs : args);
+            return {
+                configurable,
+                enumerable,
+                writable: true,
+                value: async function aspect(...args: any[]) {
+                    const proceed = (...proceedArgs: any[]) => Reflect.apply(method, this, proceedArgs.length ? proceedArgs : args);
 
-                return await Promise.resolve(Reflect.apply(around, this, [{ target: this, args, proceed }]));
-            },
-        };
+                    return await Promise.resolve(Reflect.apply(around, this, [{ target: this, args, proceed }]));
+                },
+            };
     };
 }

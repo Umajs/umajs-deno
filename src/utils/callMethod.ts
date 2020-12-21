@@ -1,7 +1,7 @@
-import Result from '../core/Result';
-import { IContext } from '../typings/IContext';
-import ControllerInfo from './ControllerInfo';
-import TypeHelper from './TypeHelper';
+import Result from '../core/Result.ts';
+import { IContext } from '../typings/IContext.ts';
+import ControllerInfo from './ControllerInfo.ts';
+import TypeHelper from './TypeHelper.ts';
 
 export async function callMethod(clazz: Function, methodName: string, param: object, ctx: IContext, next: Function) {
     const clazzInfo = ControllerInfo.get(clazz);
@@ -19,7 +19,7 @@ export async function callMethod(clazz: Function, methodName: string, param: obj
     if (!methodInfo || !TypeHelper.isFunction(method)) return next();
 
     const { args = [] } = methodInfo;
-    const argsV = [];
+    const argsV: any[] = [];
 
     ctx.param = param;
     for (const { argDecorator, argProps, argIndex } of args) {

@@ -1,33 +1,32 @@
-import * as Koa from 'koa';
-import { pathToRegexp, Key } from 'path-to-regexp';
+import { Koa } from '../node-to-deno/koa.ts';
+import { pathToRegexp, Key } from 'https://deno.land/x/path_to_regexp@v6.2.0/index.ts';
 
-import { loadDir, replaceTailSlash } from './utils';
-import controllerInfo from './utils/ControllerInfo';
-import Require from './utils/Require';
-import { callMethod } from './utils/callMethod';
+import { loadDir, replaceTailSlash } from './utils/index.ts';
+import controllerInfo from './utils/ControllerInfo.ts';
+import Require from './utils/Require.ts';
+import { callMethod } from './utils/callMethod.ts';
 
-import { TPathInfo } from './typings/TPathInfo';
-import { IContext } from './typings/IContext';
-import { context } from './extends/Context';
-import { response } from './extends/Response';
-import { request } from './extends/Request';
-import expansion from './extends';
+import { TPathInfo } from './typings/TPathInfo.ts';
+import { IContext } from './typings/IContext.ts';
+import { context } from './extends/Context.ts';
+import { response } from './extends/Response.ts';
+import { request } from './extends/Request.ts';
+import expansion from './extends/index.ts';
 
-export { default as BaseController } from './core/BaseController';
-export { Path, RequestMethod } from './decorators/Path';
-export { Resource, Inject } from './decorators/Resource';
-export { Around, middlewareToAround } from './decorators/Around';
-export { createArgDecorator, Query, Param, Context } from './decorators/ArgDecorator';
+export { default as BaseController } from './core/BaseController.ts';
+export { Path, RequestMethod } from './decorators/Path.ts';
+export { Resource, Inject } from './decorators/Resource.ts';
+export { Around, middlewareToAround } from './decorators/Around.ts';
+export { createArgDecorator, Query, Param, Context } from './decorators/ArgDecorator.ts';
 export { expansion };
 
-export function Router({ ROOT, app }: {
+export async function Router({ ROOT, app }: {
     ROOT: string,
     app: Koa,
 }) {
-    expansion(app, { context, request, response });
-    loadDir(ROOT, (fileName) => {
-        Require.default(fileName);
-    });
+    const fileArr: string[] = [];
+    loadDir(ROOT, fileArr, ['views', 'static']);
+    await Promise.all(fileArr.map(async (filePath) => await Require.default(filePath)));
 
     const StaticRouterMap: Map<String, TPathInfo> = new Map();
     const RegexpRouterMap: Map<RegExp, TPathInfo> = new Map();
@@ -41,14 +40,14 @@ export function Router({ ROOT, app }: {
         for (const [methodName, methodInfo] of methodMap) {
             const { paths } = methodInfo;
 
-            paths.forEach(({ path: p, methodTypes }) => {
+            paths!.forEach(({ path: p, methodTypes }) => {
                 const routePath = replaceTailSlash(root + p) || '/';
 
                 if (RoutePathSet.has(routePath)) return console.log(`[URL NOT UNIQUE] ${routePath}`);
                 console.log(`[URL]${routePath}`);
                 RoutePathSet.add(routePath);
 
-                if (p.indexOf(':') > -1 || p.indexOf('(') > -1) {
+                if (p!.indexOf(':') > -1 || p!.indexOf('(') > -1) {
                     const keys: Key[] = [];
                     const pathReg = pathToRegexp(routePath, keys);
 
@@ -66,10 +65,10 @@ export function Router({ ROOT, app }: {
 
             if (result) {
                 // mixin keys and params
-                const params = {};
+                const params: any = {};
                 const paramArr = result.slice(1);
 
-                keys.forEach((k, i) => {
+                keys!.forEach((k, i) => {
                     params[k.name] = paramArr[i];
                 });
 
@@ -81,15 +80,18 @@ export function Router({ ROOT, app }: {
     }
 
     return (ctx: IContext, next: Function) => {
+        app.context = ctx;
+        expansion(app, { context, request, response });
+
         const { method: methodType } = ctx.request;
-        const reqPath = replaceTailSlash(ctx.request.path) || '/';
+        const reqPath = replaceTailSlash(ctx.request.url.pathname) || '/';
 
         const staticResult = StaticRouterMap.get(reqPath);
 
         if (staticResult && (!staticResult.methodTypes || staticResult.methodTypes.indexOf(methodType) > -1)) {
             const { clazz, methodName } = staticResult;
 
-            return callMethod(clazz, methodName, {}, ctx, next);
+            return callMethod(clazz!, methodName!, {}, ctx, next);
         }
 
         const regexpResult = MatchRegexp(reqPath);
@@ -97,7 +99,7 @@ export function Router({ ROOT, app }: {
         if (regexpResult && (!regexpResult.methodTypes || regexpResult.methodTypes.indexOf(methodType) > -1)) {
             const { clazz, methodName, params = {} } = regexpResult;
 
-            return callMethod(clazz, methodName, params, ctx, next);
+            return callMethod(clazz!, methodName!, params, ctx, next);
         }
 
         return next();

@@ -1,5 +1,5 @@
-import controllerInfo from '../utils/ControllerInfo';
-import TypeHelper from '../utils/TypeHelper';
+import controllerInfo from '../utils/ControllerInfo.ts';
+import TypeHelper from '../utils/TypeHelper.ts';
 
 /* eslint no-shadow: 0 */
 export enum RequestMethod {
@@ -49,8 +49,8 @@ export function Path(...args: [...string[]] | [TPathObjArgs]): Function {
         }
 
         // decorator method
-        const values = [];
-        const methodTypes = [];
+        const values: any[] = [];
+        const methodTypes: string[] = [];
 
         if (TypeHelper.isObject(arg0)) {
             if (args.length > 1) throw new Error('@Path only receive one Object as a parameter');
@@ -68,7 +68,7 @@ export function Path(...args: [...string[]] | [TPathObjArgs]): Function {
 
         const [target, methodName] = props;
 
-        values.forEach((p) => {
+        values.forEach((p: any) => {
             if (!TypeHelper.isString(p) || !p.startsWith('/')) throw new Error(`path must be string start with "/", now is "${p}"`);
 
             controllerInfo.setControllersInfo(target.constructor, <string>methodName, { path: p, methodTypes });
