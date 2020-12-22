@@ -32,7 +32,7 @@ export const context: BaseContext = {
     param: {},
 
     get query() {
-        let data:any = {};
+        let data: any = {};
         // @ts-ignore
         for (const [key, value] of this?.url?.searchParams) {
             data[key] = value;

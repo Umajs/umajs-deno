@@ -1,5 +1,4 @@
-import Result from '../../src/core/Result.ts';
-import { Path, RequestMethod, BaseController, Param, Around, middlewareToAround, Inject } from '../../src/index.ts';
+import { Result, Path, RequestMethod, BaseController, Param, Around, middlewareToAround, Inject } from '../../mod.ts';
 import Test from '../service/Test.ts';
 
 // Path 修饰 class 时，参数为根路由(参数只能一个)

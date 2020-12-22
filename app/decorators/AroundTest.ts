@@ -1,7 +1,6 @@
 import { Koa, Middleware } from '../../node-to-deno/koa.ts';
 
-import { Around, IProceedJoinPoint, middlewareToAround } from "../../src/decorators/Around.ts";
-import { IContext } from "../../src/typings/IContext.ts";
+import { Around, IProceedJoinPoint, middlewareToAround, IContext } from "../../mod.ts";
 /**
  * 封装中间件装饰器
  * @param middleware 中间件

@@ -1,6 +1,5 @@
 
-import Result from '../../src/core/Result.ts';
-import { Path, RequestMethod, BaseController, Param, Around, Inject } from '../../src/index.ts';
+import { Result, Path, RequestMethod, BaseController, Param, Around, Inject } from '../../mod.ts';
 import { Middleware, test, test1 } from '../decorators/AroundTest.ts';
 import { Get } from '../decorators/Path.ts';
 import { TestMiddleware } from '../middlewares/Test.ts';
@@ -20,7 +19,7 @@ export default class Index extends BaseController {
     index() {
         console.log(this.t.test());
 
-        return Result.view('index.ejs', { frameName: "Umajs"} );
+        return Result.view('index.ejs', { frameName: "Umajs" });
     }
 
     @Path({ value: '/post', method: RequestMethod.POST })

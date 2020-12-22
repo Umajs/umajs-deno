@@ -13,13 +13,6 @@ import { response } from './extends/Response.ts';
 import { request } from './extends/Request.ts';
 import expansion from './extends/index.ts';
 
-export { default as BaseController } from './core/BaseController.ts';
-export { Path, RequestMethod } from './decorators/Path.ts';
-export { Resource, Inject } from './decorators/Resource.ts';
-export { Around, middlewareToAround } from './decorators/Around.ts';
-export { createArgDecorator, Query, Param, Context } from './decorators/ArgDecorator.ts';
-export { expansion };
-
 export async function Router({ ROOT, app }: {
     ROOT: string,
     app: Koa,

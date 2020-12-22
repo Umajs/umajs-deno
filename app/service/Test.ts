@@ -1,4 +1,4 @@
-import { Resource } from '../../src/index.ts';
+import { Resource } from '../../mod.ts';
 
 @Resource()
 export default class Test {

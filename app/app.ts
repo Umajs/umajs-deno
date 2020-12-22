@@ -2,7 +2,7 @@ import { Koa } from '../node-to-deno/koa.ts';
 import { __dirname, viewsMiddleware, staticMiddleware, path } from '../node-to-deno/mod.ts';
 
 // process.env.ROUTE_ENV_TYPE = 'dev';
-import { Router } from '../src/index.ts';
+import { Router } from '../mod.ts';
 
 const app = new Koa();
 const port = 3000;
