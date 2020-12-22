@@ -1,5 +1,5 @@
 import { Koa } from '../node-to-deno/koa.ts';
-import { __dirname, viewsMiddleware, path } from '../node-to-deno/mod.ts';
+import { __dirname, viewsMiddleware, staticMiddleware, path } from '../node-to-deno/mod.ts';
 
 // process.env.ROUTE_ENV_TYPE = 'dev';
 import { Router } from '../src/index.ts';
@@ -8,6 +8,7 @@ const app = new Koa();
 const port = 3000;
 
 app.use(viewsMiddleware({ viewRoot: path.join(__dirname(import.meta), './views') }));
+app.use(staticMiddleware(path.join(__dirname(import.meta), './static')));
 
 app.use(async (ctx, next) => {
     if (ctx.request.url.pathname === '/favicon.ico') return;
