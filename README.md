@@ -1,7 +1,6 @@
-# koa-router-class
+# umajs-deno
 
-    koa 路由，将路由转发到 class 方法上
-    基于 path-to-regexp 库
+    [Umajs](https://github.com/wuba/Umajs) deno 版本，拥有 Umajs 全量功能。
 
 ### demo
 
