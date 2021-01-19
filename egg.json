@@ -1,0 +1,24 @@
+{
+    "name": "umajs_deno",
+    "entry": "./mod.ts",
+    "description": "[Umajs](https://github.com/wuba/Umajs) deno 版本，拥有 Umajs 全量功能。",
+    "homepage": "https://github.com/Umajs/umajs-deno",
+    "unstable": true,
+    "unlisted": false,
+    "version": "1.0.0",
+    "releaseType": "major",
+    "files": [
+        "./mod.ts",
+        "./app/**/*",
+        "./node-to-deno/**/*",
+        "./src/**/*",
+        "./README.md"
+    ],
+    "ignore": [
+        ".git"
+    ],
+    "checkFormat": "deno fmt",
+    "checkTests": "deno test",
+    "checkInstallation": true,
+    "check": false
+}
