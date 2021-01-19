@@ -9,8 +9,8 @@
             "type": "pwa-node",
             "request": "launch",
             "runtimeExecutable": "deno",
-            "runtimeArgs": ["run", "--inspect-brk", "-A", "app.ts"],
-            "cwd": "${workspaceFolder}/app",
+            "runtimeArgs": ["run", "--inspect-brk", "-A", "-c", "tsconfig.json", "app/app.ts"],
+            "cwd": "${workspaceFolder}",
             "outputCapture": "std",
             "attachSimplePort": 9229
         }
