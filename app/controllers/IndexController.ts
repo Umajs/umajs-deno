@@ -1,7 +1,6 @@
 
-import { Result, Path, RequestMethod, BaseController, Param, Around, Inject } from '../../mod.ts';
+import { Result, Path, RequestMethod, Get, BaseController, Param, Around, Inject } from '../../mod.ts';
 import { Middleware, test, test1 } from '../decorators/AroundTest.ts';
-import { Get } from '../decorators/Path.ts';
 import { TestMiddleware } from '../middlewares/Test.ts';
 import Test from '../service/Test.ts';
 import { __dirname } from '../../node-to-deno/mod.ts';

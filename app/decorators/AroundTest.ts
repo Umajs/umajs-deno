@@ -1,13 +1,4 @@
-import { Koa, Middleware } from '../../node-to-deno/koa.ts';
-
-import { Around, IProceedJoinPoint, middlewareToAround, IContext } from "../../mod.ts";
-/**
- * 封装中间件装饰器
- * @param middleware 中间件
- */
-export function Middleware(middleware: Middleware<any, IContext>) {
-    return Around(middlewareToAround(middleware));
-}
+import { IProceedJoinPoint } from "../../mod.ts";
 
 /**
  * 切面 Around 方法

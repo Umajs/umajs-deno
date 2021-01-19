@@ -68,3 +68,11 @@ export function Around(around: (point: IProceedJoinPoint) => Promise<Result>): F
         };
     };
 }
+
+/**
+ * 封装中间件装饰器
+ * @param middleware 中间件
+ */
+export function Middleware(middleware: Middleware<any, IContext>) {
+    return Around(middlewareToAround(middleware));
+}

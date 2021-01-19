@@ -24,7 +24,7 @@ export default class Result<T = any> implements IResult {
         });
     }
 
-    static send(data: string | Deno.Buffer , status?: number) {
+    static send(data: string | Deno.Buffer, status?: number) {
         return new Result({
             type: 'send',
             data,
