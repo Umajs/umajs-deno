@@ -28,11 +28,12 @@ import {
   RequestMethod,
   BaseController,
   Param,
+  Get,
   Around,
   Inject,
+  Middleware,
 } from "../../mod.ts";
-import { Middleware, test, test1 } from "../decorators/AroundTest.ts";
-import { Get } from "../decorators/Path.ts";
+import { test, test1 } from "../decorators/AroundTest.ts";
 import { TestMiddleware } from "../middlewares/Test.ts";
 import Test from "../service/Test.ts";
 import { __dirname } from "../../node-to-deno/mod.ts";

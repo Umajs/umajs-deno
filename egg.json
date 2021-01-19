@@ -5,7 +5,7 @@
     "homepage": "https://github.com/Umajs/umajs-deno",
     "unstable": true,
     "unlisted": false,
-    "version": "1.0.0",
+    "version": "0.0.0",
     "releaseType": "major",
     "files": [
         "./mod.ts",
