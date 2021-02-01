@@ -1,9 +1,9 @@
 import { IContext } from "../../mod.ts";
 
 export const TestMiddleware = async (ctx: IContext, next: Function) => {
-    console.log('====middleware before====')
+  console.log("====middleware before====");
 
-    await next();
+  await next();
 
-    console.log('====middleware after====')
-}
+  console.log("====middleware after====");
+};

@@ -1,22 +1,22 @@
-import controllerInfo from '../utils/ControllerInfo.ts';
-import TypeHelper from '../utils/TypeHelper.ts';
+import controllerInfo from "../utils/ControllerInfo.ts";
+import TypeHelper from "../utils/TypeHelper.ts";
 
 /* eslint no-shadow: 0 */
 export enum RequestMethod {
-    GET = 'GET',
-    POST = 'POST',
-    PUT = 'PUT',
-    OPTION = 'OPTION',
-    HEAD = 'HEAD',
-    DELETE = 'DELETE',
-    TRACE = 'TRACE',
-    CONNECT = 'CONNECT',
+  GET = "GET",
+  POST = "POST",
+  PUT = "PUT",
+  OPTION = "OPTION",
+  HEAD = "HEAD",
+  DELETE = "DELETE",
+  TRACE = "TRACE",
+  CONNECT = "CONNECT",
 }
 
 export type TPathObjArgs = {
-    value?: string | string[],
-    method?: RequestMethod | RequestMethod[],
-}
+  value?: string | string[];
+  method?: RequestMethod | RequestMethod[];
+};
 
 /**
  * 路由装饰器
@@ -33,65 +33,92 @@ export type TPathObjArgs = {
  */
 export function Path(...args: string[]): Function;
 
-export function Path(arg: { value?: string | string[]; method?: RequestMethod | RequestMethod[]; }): Function;
+export function Path(
+  arg: { value?: string | string[]; method?: RequestMethod | RequestMethod[] },
+): Function;
 
 export function Path(...args: [...string[]] | [TPathObjArgs]): Function {
-    return function Method(...props: Parameters<MethodDecorator> | Parameters<ClassDecorator>) {
-        const [arg0] = args;
+  return function Method(
+    ...props: Parameters<MethodDecorator> | Parameters<ClassDecorator>
+  ) {
+    const [arg0] = args;
 
-        // decorate class
-        if (props.length === 1) {
-            if (args.length > 1) throw new Error('@Path only receivew one (string) parameter when decorate class');
+    // decorate class
+    if (props.length === 1) {
+      if (args.length > 1) {
+        throw new Error(
+          "@Path only receivew one (string) parameter when decorate class",
+        );
+      }
 
-            if (!TypeHelper.isString(arg0) || !arg0.startsWith('/')) throw new Error(`path must be string start with "/", now is "${arg0}"`);
+      if (!TypeHelper.isString(arg0) || !arg0.startsWith("/")) {
+        throw new Error(`path must be string start with "/", now is "${arg0}"`);
+      }
 
-            return controllerInfo.setControllersInfo(props[0], null, { root: arg0 });
+      return controllerInfo.setControllersInfo(props[0], null, { root: arg0 });
+    }
+
+    // decorator method
+    const values: any[] = [];
+    const methodTypes: string[] = [];
+
+    if (TypeHelper.isObject(arg0)) {
+      if (args.length > 1) {
+        throw new Error("@Path only receive one Object as a parameter");
+      }
+
+      const { value = "/", method = [] } = arg0;
+
+      values.push(...(Array.isArray(value) ? value : [value]));
+      methodTypes.push(...(Array.isArray(method) ? method : [method]));
+    } else {
+      (args.length > 0 ? args : ["/"]).forEach((arg: any) => {
+        if (TypeHelper.isString(arg)) values.push(arg);
+        else {
+          throw new Error(
+            `@Path only receive one Object as a parameter, now is "${JSON.stringify(arg)
+            }"`,
+          );
         }
+      });
+    }
 
-        // decorator method
-        const values: any[] = [];
-        const methodTypes: string[] = [];
+    const [target, methodName] = props;
 
-        if (TypeHelper.isObject(arg0)) {
-            if (args.length > 1) throw new Error('@Path only receive one Object as a parameter');
+    values.forEach((p: any) => {
+      if (!TypeHelper.isString(p) || !p.startsWith("/")) {
+        throw new Error(`path must be string start with "/", now is "${p}"`);
+      }
 
-            const { value = '/', method = [] } = arg0;
-
-            values.push(...(Array.isArray(value) ? value : [value]));
-            methodTypes.push(...(Array.isArray(method) ? method : [method]));
-        } else {
-            (args.length > 0 ? args : ['/']).forEach((arg: any) => {
-                if (TypeHelper.isString(arg)) values.push(arg);
-                else throw new Error(`@Path only receive one Object as a parameter, now is "${JSON.stringify(arg)}"`);
-            });
-        }
-
-        const [target, methodName] = props;
-
-        values.forEach((p: any) => {
-            if (!TypeHelper.isString(p) || !p.startsWith('/')) throw new Error(`path must be string start with "/", now is "${p}"`);
-
-            controllerInfo.setControllersInfo(target.constructor, <string>methodName, { path: p, methodTypes });
-        });
-    };
+      controllerInfo.setControllersInfo(
+        target.constructor,
+        <string>methodName,
+        { path: p, methodTypes },
+      );
+    });
+  };
 }
 
-export const Get = (...value: string[]) => Path({
+export const Get = (...value: string[]) =>
+  Path({
     value,
     method: RequestMethod.GET,
-});
+  });
 
-export const Post = (...value: string[]) => Path({
+export const Post = (...value: string[]) =>
+  Path({
     value,
     method: RequestMethod.POST,
-});
+  });
 
-export const Put = (...value: string[]) => Path({
+export const Put = (...value: string[]) =>
+  Path({
     value,
     method: RequestMethod.PUT,
-});
+  });
 
-export const Del = (...value: string[]) => Path({
+export const Del = (...value: string[]) =>
+  Path({
     value,
     method: RequestMethod.DELETE,
-});
+  });

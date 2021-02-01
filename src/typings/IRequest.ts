@@ -1,36 +1,36 @@
-import { Koa, Request } from '../../node-to-deno/koa.ts';
+import { Koa, Request } from "../../node-to-deno/koa.ts";
 // import { Files } from 'formidable';
 
-import { IContext } from './IContext.ts';
-import { IResponse } from './IResponse.ts';
+import { IContext } from "./IContext.ts";
+import { IResponse } from "./IResponse.ts";
 
 export interface ContextDelegatedRequest {
-    /**
+  /**
      * Return request header, alias as request.header
      */
-    headers?: any;
+  headers?: any;
 
-    /**
+  /**
      * Get/Set request URL.
      */
-    url?: URL;
+  url?: URL;
 
-    /**
+  /**
      * Get origin of URL.
      */
-    origin?: string;
+  origin?: string;
 
-    /**
+  /**
      * Get/Set request method.
      */
-    method?: string;
+  method?: string;
 }
 
 export interface BaseRequest {}
 
 export interface IRequest extends Request, BaseRequest {
-    ctx: IContext,
-    response: IResponse
-    // body?: any;
-    // files?: Files;
+  ctx: IContext;
+  response: IResponse;
+  // body?: any;
+  // files?: Files;
 }

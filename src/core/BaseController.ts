@@ -1,64 +1,65 @@
-import Result from './Result.ts';
-import { IContext, BaseContext } from '../typings/IContext.ts';
-import { IRequest } from '../typings/IRequest.ts';
-import { IResponse } from '../typings/IResponse.ts';
+import Result from "./Result.ts";
+import { BaseContext, IContext } from "../typings/IContext.ts";
+import { IRequest } from "../typings/IRequest.ts";
+import { IResponse } from "../typings/IResponse.ts";
 
 /**
  * controller 自带方法在 ctx 中也有相同实现
  */
 export default class BaseController implements BaseContext {
-    constructor(readonly ctx: IContext) {
-        const { request: req, response: res } = ctx;
+  constructor(readonly ctx: IContext) {
+    const { request: req, response: res } = ctx;
 
-        this.req = req;
-        this.res = res;
-        this.request = req;
-        this.response = res;
-    }
+    this.req = req;
+    this.res = res;
+    this.request = req;
+    this.response = res;
+  }
 
-    req: IRequest;
+  req: IRequest;
 
-    res: IResponse;
+  res: IResponse;
 
-    request: IRequest;
+  request: IRequest;
 
-    response: IResponse;
+  response: IResponse;
 
-    set status(status: number) {
-        this.ctx.status = status;
-    }
+  set status(status: number) {
+    this.ctx.status = status;
+  }
 
-    sendData = Result.send;
+  sendData = Result.send;
 
-    json = Result.json;
+  json = Result.json;
 
-    jsonp = Result.jsonp;
+  jsonp = Result.jsonp;
 
-    view = async (viewPath: string, locals: { [key: string]: any } = {}) => Result.view(viewPath, locals);
+  view = async (viewPath: string, locals: { [key: string]: any } = {}) =>
+    Result.view(viewPath, locals);
 
-    stream = Result.stream
+  stream = Result.stream;
 
-    download = Result.download
+  download = Result.download;
 
-    redirect = Result.redirect
+  redirect = Result.redirect;
 
-    get userAgent() {
-        return this.ctx.headers['user-agent'];
-    }
+  get userAgent() {
+    return this.ctx.headers["user-agent"];
+  }
 
-    get param() {
-        return this.ctx.param;
-    }
+  get param() {
+    return this.ctx.param;
+  }
 
-    get query() {
-        return this.ctx.query;
-    }
+  get query() {
+    return this.ctx.query;
+  }
 
-    setHeader(name: string | any, value: string | string[]): void {
-        this.ctx.setHeader(name, value);
-    }
+  setHeader(name: string | any, value: string | string[]): void {
+    this.ctx.setHeader(name, value);
+  }
 
-    getHeader(name: string | any): any {
-        return this.ctx.getHeader(name);
-    }
+  getHeader(name: string | any): any {
+    return this.ctx.getHeader(name);
+  }
 }

@@ -1,8 +1,8 @@
-import { Resource } from '../../mod.ts';
+import { Resource } from "../../mod.ts";
 
 @Resource()
 export default class Test {
-    test() {
-        return 1;
-    }
+  test() {
+    return 1;
+  }
 }

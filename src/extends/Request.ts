@@ -1,4 +1,3 @@
-import { BaseRequest } from '../typings/IRequest.ts';
+import { BaseRequest } from "../typings/IRequest.ts";
 
-export const request: BaseRequest = {
-};
+export const request: BaseRequest = {};

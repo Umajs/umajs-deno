@@ -9,7 +9,7 @@ clone 当前工程，在根目录下执行 `deno run --allow-read --allow-net -c
 ### usage
 
 ```js
-import { Router } from "../mod.ts";
+import { Router } from "https://deno.land/x/umajs/mod.ts";
 
 app.use(
   await Router({
@@ -32,7 +32,7 @@ import {
   Around,
   Inject,
   Middleware,
-} from "../../mod.ts";
+} from "https://deno.land/x/umajs/mod.ts";
 import { test, test1 } from "../decorators/AroundTest.ts";
 import { TestMiddleware } from "../middlewares/Test.ts";
 import Test from "../service/Test.ts";

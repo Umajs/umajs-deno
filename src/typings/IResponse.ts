@@ -1,15 +1,15 @@
-import { Koa, Response } from '../../node-to-deno/koa.ts';
+import { Koa, Response } from "../../node-to-deno/koa.ts";
 
-import { IContext } from './IContext.ts';
-import { IRequest } from './IRequest.ts';
+import { IContext } from "./IContext.ts";
+import { IRequest } from "./IRequest.ts";
 
 export interface ContextDelegatedResponse {
-    /**
+  /**
      * Get/Set response status code.
      */
-    status?: number;
+  status?: number;
 
-    /**
+  /**
      * Return the response mime type void of
      * parameters such as "charset".
      *
@@ -24,14 +24,14 @@ export interface ContextDelegatedResponse {
      *     this.type = 'application/json';
      *     this.type = 'png';
      */
-    type?: string;
+  type?: string;
 
-    /**
+  /**
      * Get/Set response body.
      */
-    body?: any;
+  body?: any;
 
-    /**
+  /**
      * Perform a 302 redirect to `url`.
      *
      * The string "back" is special-cased
@@ -45,12 +45,12 @@ export interface ContextDelegatedResponse {
      *    this.redirect('/login');
      *    this.redirect('http://google.com');
      */
-    redirect?(url: string, alt?: string): void;
+  redirect?(url: string, alt?: string): void;
 }
 
 export interface BaseResponse {}
 
 export interface IResponse extends Response, BaseResponse {
-    ctx: IContext;
-    request: IRequest;
+  ctx: IContext;
+  request: IRequest;
 }
