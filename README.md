@@ -33,10 +33,10 @@ import {
   Inject,
   Middleware,
 } from "https://deno.land/x/umajs/mod.ts";
+
 import { test, test1 } from "../decorators/AroundTest.ts";
 import { TestMiddleware } from "../middlewares/Test.ts";
 import Test from "../service/Test.ts";
-import { __dirname } from "../../node-to-deno/mod.ts";
 
 // Path 修饰 class 时，参数为根路由(参数只能一个)
 // Path 修饰 method 时，参数为方法路由(参数可有多个)
